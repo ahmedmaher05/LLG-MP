@@ -35,7 +35,7 @@ what can i do with LLG-MP ?
 * refer to new words/expressions in savedWords view 
 
 how to use LLG-MP ? 
-* As a regular user : download and install the latest release from <a href="https://github.com/engMaher/LLG-MP/releases">here</a> which complies with your operation system [currently only windows 64-bit is supported] 
+* As a regular user : download and install the latest release from this <a href="https://github.com/engMaher/LLG-MP/releases">link</a> which complies with your operation system type/architecture [currently only windows 64-bit is supported] 
 
 * As a contributer : clone the repo => npm install , npm install -g electron@1.4.3 => electron .
 
