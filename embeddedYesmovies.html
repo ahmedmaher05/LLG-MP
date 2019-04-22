@@ -1,0 +1,68 @@
+<html>
+
+<head>
+    <style>
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            padding: 0px;
+            margin: 0px
+        }
+
+        #player {
+            width: 100%;
+            height: 100%
+        }
+
+        .captions-display .div {
+            background-color: transparent !important;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+        .noselect {
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+        }
+
+        .wcp-subtitle-but {
+            display: none !important;
+        }
+
+        .swal2-container {
+            z-index: 2147483647 !important
+        }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+</head>
+<iframe id="player" allowfullscreen="true" src="https://yesmovies.to/"
+    sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin">
+</iframe>
+<title>LLG Media Player</title>
+<div id="drag-file">
+</div>
+<div class="captions-area"></div>
+<div class="captions-display"></div>
+<script src="./scripts/vtt.js"> </script>
+<script src="./scripts/swal.js"> </script>
+<script src="./scripts/MpRenderer.js"></script>
+<script src="./scripts/ExtRenderer.js"></script>
+<script>
+    var mainVar = require('electron').remote;
+    mainVar.getGlobal('visitor').pageview("/Yesmovies").send()
+</script>
+
+</html>

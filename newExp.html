@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>LLG Media Player</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="./mdb/css/addons/datatables.css" rel="stylesheet">
+    <link href="./mdb/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+</head>
+
+<body>
+    <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th class="th-sm">Expression
+                </th>
+                <th class="th-sm">Translation
+                </th>
+                <th class="th-sm">Media
+                </th>
+                <th class="th-sm">PauseTime</th>
+            </tr>
+        </thead>
+        <tbody id="dtableb">
+        </tbody>
+    </table>
+    <script src="./scripts/vtt.js"> </script>
+    <script src="./scripts/swal.js"> </script>
+    <script src="./scripts/MpRenderer.js"></script>
+    <script type="text/javascript" src="./mdb/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="./mdb/js/jquery-3.3.1.min.js">
+    </script>
+    <script type="text/javascript" src="./mdb/js/addons/datatables.js"></script>
+    <script src="./scripts/newExpRenderer.js"></script>
+    <script>
+        var mainVar = require('electron').remote;
+        mainVar.getGlobal('visitor').pageview("/newExp").send()
+    </script>
+</body>
+
+</html>
