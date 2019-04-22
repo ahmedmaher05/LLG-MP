@@ -76,6 +76,6 @@ TODO list(features)
 
 Special Thanks to : 
 
-- the open source community for sharing 
-- opensubtitles <a href="http://trac.opensubtitles.org/projects/opensubtitles/wiki/DevReadFirst"> support team </a> for granting LLG-MP an API agent 
+- the open source community for sharing knowledge 
+- opensubtitles <a href="http://trac.opensubtitles.org/projects/opensubtitles/wiki/DevReadFirst"> support team </a> for granting LLG-MP an API agent for free
 - <a href="https://electronjs.org/community"> electron </a> and <a href="https://github.com/RSATom/WebChimera.js">Webchimera.js</a> communities for the support
