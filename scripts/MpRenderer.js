@@ -4,7 +4,9 @@ var ipc = require('electron').ipcRenderer;
 const {
     shell
 } = require('electron')
-var translate = require('google-translate-api');
+var {
+    translate
+} = require("google-translate-api-browser");
 var $ = require('jquery');
 var Datastore = require('nedb'),
     db = new Datastore({
@@ -176,7 +178,8 @@ function drop(evt) {
     var url, res;
     url = rex.exec(vidUrl);
 }
-var loadSubtitles = function (fpath) {
+
+function loadSubtitles(fpath) {
     var xhr = new XMLHttpRequest();
     var xhr2 = new XMLHttpRequest();
     xhr.open('GET', "file:///" + fpath.replace(/\\/ig, '/').split(
