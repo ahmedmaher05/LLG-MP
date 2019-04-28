@@ -23,9 +23,9 @@ LLG-MP features :
 * transforms subtitles/lyrics words and phrases into clickable strings , once clicked their google translation appears 
 * automatic detection for subtitles/lyrics language with support of translation to 10+ different languages 
 * integrates with <a href="https://www.youtube.com"> youtube </a> and <a href="https://yesmovies.to/"> yesmovies </a> 
-* ability to fetch songs lyrics by song name & singer name then show it on either local media files or youtube/yesmovies videos (clickable & translatable)
-* ability to import subtitles file and append it to either local media files or youtube/yesmovies videos (clickable & translatable)
-* ability to save new words/phrases along with their translation , media path/url and time of occurence 
+* ability to fetch songs lyrics by song name & singer name then show it on either local media or remote media from youtube/yesmovies (clickable & translatable)
+* ability to import subtitles file and append it to either local media or remote media from youtube/yesmovies videos (clickable & translatable)
+* ability to save new words/phrases along with their translation , local media path/remote media url and time of occurence in the media file
 
 what can i do with LLG-MP ?
 * you can use it as a regular media player much like vlc 
