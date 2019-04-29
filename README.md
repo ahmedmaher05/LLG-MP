@@ -34,7 +34,7 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 * Browse PC for subtitles file and append it to local media / youtube video / yesmovies video 
 * Refer to new words/expressions in savedWords view 
 
-## how to use LLG-MP ? 
+## How to use LLG-MP ? 
 * As a regular user : download and install the latest release from this <a href="https://github.com/engMaher/LLG-MP/releases">link</a> which complies with your operation system type/architecture [currently only windows 64-bit is supported] 
 
 * As a contributer :      
