@@ -5,9 +5,9 @@
 <br>
 Language Learning Gamification Media Player 
 
-* version [0.1.0] --> [(public releases).(beta versions).(bugfixes patches)]
+* Version [0.1.0] --> [(public releases).(beta versions).(bugfixes patches)]
 
-* this software is under  AGPLv3 license 
+* This software is under  AGPLv3 license 
 
 ______________________________________________________________________________________________________________________________
 ## what is LLG-MP ? 
