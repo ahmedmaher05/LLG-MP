@@ -18,21 +18,21 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 
 
 ## LLG-MP features 
-* supports almost all media formats much like VLC media player as both are built on the same media engine (libvlc)  
-* supports popular subtitles files such as .vtt & .srt
-* transforms subtitles/lyrics words and phrases into clickable strings , once clicked their google translation appears 
-* automatic detection for subtitles/lyrics language with support of translation to 10+ different languages 
-* integrates with <a href="https://www.youtube.com"> youtube </a> and <a href="https://yesmovies.to/"> yesmovies </a> 
-* ability to fetch songs lyrics by song name & singer name then show it on either local media or remote media from youtube/yesmovies (clickable & translatable)
-* ability to import subtitles file and append it to either local media or remote media from youtube/yesmovies videos (clickable & translatable)
-* ability to save new words/phrases along with their translation , local media path/remote media url and time of occurence in the media file
+* Supports almost all media formats much like VLC media player as both are built on the same media engine (libvlc)  
+* Supports popular subtitles files such as .vtt & .srt
+* Transforms subtitles/lyrics words and phrases into clickable strings , once clicked their google translation appears 
+* Automatic detection for subtitles/lyrics language with support of translation to 10+ different languages 
+* Integrates with <a href="https://www.youtube.com"> youtube </a> and <a href="https://yesmovies.to/"> yesmovies </a> 
+* Ability to fetch songs lyrics by song name & singer name then show it on either local media or remote media from youtube/yesmovies (clickable & translatable)
+* Ability to import subtitles file and append it to either local media or remote media from youtube/yesmovies videos (clickable & translatable)
+* Ability to save new words/phrases along with their translation , local media path/remote media url and time of occurence in the media file
 
 ## what can i do with LLG-MP ?
-* you can use it as a regular media player much like vlc 
-* browse pc for a subtitles file to be appended to youtube / yesmovies videos 
-* search and fetch lyrics while playing youtube songs with controls over the video through keyboard buttons 
-* browse PC for subtitles file and append it to local media / youtube video / yesmovies video 
-* refer to new words/expressions in savedWords view 
+* You can use it as a regular media player much like vlc 
+* Browse pc for a subtitles file to be appended to youtube / yesmovies videos 
+* Search and fetch lyrics while playing youtube songs with controls over the video through keyboard buttons 
+* Browse PC for subtitles file and append it to local media / youtube video / yesmovies video 
+* Refer to new words/expressions in savedWords view 
 
 ## how to use LLG-MP ? 
 * As a regular user : download and install the latest release from this <a href="https://github.com/engMaher/LLG-MP/releases">link</a> which complies with your operation system type/architecture [currently only windows 64-bit is supported] 
@@ -49,8 +49,7 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 ![alt tag](https://i.imgur.com/S9TQn4w.png)
 ![alt tag](https://i.imgur.com/ZWXoQ2t.png)
 ![alt tag](https://i.imgur.com/eKaPn6N.png)
-<br>
-<br>
+
 ![alt tag](https://i.imgur.com/ViVFC77.png)
 ![alt tag](https://i.imgur.com/4BEHrJW.png)
 ![alt tag](https://i.imgur.com/XgRXKxt.png)
@@ -67,17 +66,17 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 
 ## TODO list(features) 
 - [x] Customization of Mozilla's implementation of WEBVTT standard library for making subtitles clickable
-- [x] interception/customization of sent http headers to overcome same origin regulation from youtube 
+- [x] Interception/customization of sent http headers to overcome same origin regulation from youtube 
 - [x] Dom tree traversal for detection of yesmovies players nested iframes 
-- [x] drag&drop  
-- [x] youtube/yesmovies integration 
-- [x] using <a href="https://github.com/louischatriot/nedb">NEDB</a> for new words/expressions storage
-- [x] integration with <a href="https://www.azlyrics.com/">azlyrics</a> for fetching songs lyrics by song & singer names
-- [x] implementing a simple route traffic detector feedback using google analytics to user behavior anonimously for future modifications
-- [ ] opensubtitles integration 
-- [ ] implementation of user authentication system & synchronization between different instances of LLG-MP for group learning remotely  
-- [ ] adding a torrent client 
-- [ ] making the media player cross platform and signing it in both appstore and windows store 
+- [x] Drag&drop  
+- [x] Youtube/yesmovies integration 
+- [x] Using <a href="https://github.com/louischatriot/nedb">NEDB</a> for new words/expressions storage
+- [x] Integration with <a href="https://www.azlyrics.com/">azlyrics</a> for fetching songs lyrics by song & singer names
+- [x] Implementing a simple route traffic detector feedback using google analytics to user behavior anonimously for future modifications
+- [ ] Opensubtitles integration 
+- [ ] Implementation of user authentication system & synchronization between different instances of LLG-MP for group learning remotely  
+- [ ] Adding a torrent client 
+- [ ] Making the media player cross platform and signing it in both appstore and windows store 
 
 ## Contributing
 
@@ -85,6 +84,6 @@ Please read [CONTRIBUTING.md](https://gist.github.com/engMaher/6a6080973f2c7be72
 
 ## Acknowledgments
 
-- the open source community for sharing knowledge 
-- opensubtitles <a href="http://trac.opensubtitles.org/projects/opensubtitles/wiki/DevReadFirst"> support team </a> for granting LLG-MP an API agent for free
-- <a href="https://electronjs.org/community"> electron </a> and <a href="https://github.com/RSATom/WebChimera.js">Webchimera.js</a> communities for the support
+- The open source community for sharing knowledge 
+- Opensubtitles <a href="http://trac.opensubtitles.org/projects/opensubtitles/wiki/DevReadFirst"> support team </a> for granting LLG-MP an API agent for free
+- <a href="https://electronjs.org/community"> Electron </a> and <a href="https://github.com/RSATom/WebChimera.js">Webchimera.js</a> communities for the support
