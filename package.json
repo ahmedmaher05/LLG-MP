@@ -2,7 +2,7 @@
     "name": "llg-mp",
     "description": "language learning gamification media player",
     "author": "Ahmed Maher",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "main": "app.js",
     "dependencies": {
         "electron-google-analytics": "^0.1.0",
@@ -14,7 +14,9 @@
         "nedb": "^1.8.0",
         "node-localstorage": "^1.3.1",
         "npm": "^6.9.0",
+        "opensubtitles-api": "^5.0.1",
         "sweetalert": "^2.1.2",
+        "sweetalert2": "^8.10.2",
         "universal-analytics": "^0.4.20",
         "wcjs-player": "^6.0.0",
         "wcjs-prebuilt": "^3.0.0",
@@ -22,7 +24,7 @@
     },
     "env": "development",
     "devDependencies": {
-        "electron": "1.4.3",
+        "electron": "^1.4.3",
         "electron-builder": "^20.39.0"
     },
     "scripts": {
