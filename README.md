@@ -73,7 +73,7 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 - [x] Using <a href="https://github.com/louischatriot/nedb">NEDB</a> for new words/expressions storage
 - [x] Integration with <a href="https://www.azlyrics.com/">azlyrics</a> for fetching songs lyrics by song & singer names
 - [x] Implementing a simple route traffic detector feedback using google analytics to user behavior anonimously for future modifications
-- [ ] Opensubtitles integration 
+- [x] Opensubtitles integration 
 - [ ] Implementation of user authentication system & synchronization between different instances of LLG-MP for group learning remotely  
 - [ ] Adding a torrent client 
 - [ ] Making the media player cross platform and signing it in both appstore and windows store 
