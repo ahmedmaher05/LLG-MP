@@ -4,8 +4,6 @@ var ipc = require('electron').ipcRenderer;
 const OS = require('opensubtitles-api');
 const OpenSubtitles = new OS({
     useragent: 'LLG-MP v0.1',
-    username: 'LLG-MP',
-    password: 'dahag',
     ssl: true
 });
 const {
@@ -27,12 +25,10 @@ global.lyrics = false;
 global.lyricsText = "";
 global.mediaPath = '';
 global.currentPos = 0;
-global.player = new wjs("#player").addPlayer({
+var player = new wjs("#player").addPlayer({
     autoplay: true,
     wcjs: require('wcjs-prebuilt')
 });
-player.vlc.play("G:/resilio/motivationalResilio/series/silicon valley/season 1/Silicon Valley S01E01.mkv")
-
 ipc.on('updateCheck', function (event, message) {
     swal.fire(message);
 })
@@ -60,11 +56,9 @@ ipc.on('openmedia', function (event, message) {
             'aria-label': 'choose your media file'
         }
     }).then((result) => {
-        mediaPath = result.value.path;
-        console.log(result.value.path.replace(/\\/ig, '/'))
-        player.vlc.play("file:///" + result.value.path.replace(/\\/ig, '/'))
-        loadSubtitles(result.value.path);
-
+        mediaPath = result.value.path.replace(/\\/ig, '/');
+        player.vlc.play("file:///" + mediaPath)
+        loadSubtitles(mediaPath);
     })
 })
 ipc.on('opensub', function (event, message) {
@@ -141,139 +135,25 @@ ipc.on('lyrics', function (event, message) {
         }
     })
 });
+ipc.on("download complete", (event, file) => {
+    loadSubtitles(mediaPath)
+});
 ipc.on('movies/series', function (event, message) {
     OpenSubtitles.login()
         .then(res => {
-            console.log(res.token);
-            console.log("sdad", res.userinfo);
             swal.fire({
                 showCancelButton: true,
-                html: `
-                <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                <label class="input-group-text" for="inputGroupSelect01">Subtitles language</label>
-                </div>
-                <select class="custom-select" id="lang">
-                <option value=afr>Afrikaans</option>
-                <option value=alb>Albanian</option>
-                <option value=amh>Amharic</option>
-                <option value=ara>Arabic</option>
-                <option value=arm>Armenian</option>
-                <option value=aze>Azerbaijani</option>
-                <option value=baq>Basque</option>
-                <option value=bel>Belarusian</option>
-                <option value=ben>Bengali</option>
-                <option value=bos>Bosnian</option>
-                <option value=bul>Bulgarian</option>
-                <option value=cat>Catalan</option>
-                <option value=ceb>Cebuano</option>
-                <option value=nya>Chichewa</option>
-                <option value=chi>Chinese</option>
-                <option value=cos>Corsican</option>
-                <option value=hrv>Croatian</option>
-                <option value=cze>Czech</option>
-                <option value=dan>Danish</option>
-                <option value=dut>Dutch</option>
-                <option value=eng selected="selected">English</option>
-                <option value=epo>Esperanto</option>
-                <option value=est>Estonian</option>
-                <option value=fil>Filipino</option>
-                <option value=fin>Finnish</option>
-                <option value=fre>French</option>
-                <option value=frr>Frisian</option>
-                <option value=glg>Galician</option>
-                <option value=geo>Georgian</option>
-                <option value=ger>German</option>
-                <option value=gre>Greek</option>
-                <option value=guj>Gujarati</option>
-                <option value=hat>Haitian Creole</option>
-                <option value=hau>Hausa</option>
-                <option value=haw>Hawaiian</option>
-                <option value=heb>Hebrew</option>
-                <option value=hin>Hindi</option>
-                <option value=hmn>Hmong</option>
-                <option value=hun>Hungarian</option>
-                <option value=ice>Icelandic</option>
-                <option value=ibo>Igbo</option>
-                <option value=ind>Indonesian</option>
-                <option value=gle>Irish</option>
-                <option value=ita>Italian</option>
-                <option value=jpn>Japanese</option>
-                <option value=jav>Javanese</option>
-                <option value=kan>Kannada</option>
-                <option value=kaz>Kazakh</option>
-                <option value=khm>Khmer</option>
-                <option value=kor>Korean</option>
-                <option value=kur>Kurdish (Kurmanji)</option>
-                <option value=kir>Kyrgyz</option>
-                <option value=lao>Lao</option>
-                <option value=lat>Latin</option>
-                <option value=lav>Latvian</option>
-                <option value=lit>Lithuanian</option>
-                <option value=ltz>Luxembourgish</option>
-                <option value=mac>Macedonian</option>
-                <option value=mlg>Malagasy</option>
-                <option value=may>Malay</option>
-                <option value=mal>Malayalam</option>
-                <option value=mlt>Maltese</option>
-                <option value=mao>Maori</option>
-                <option value=mar>Marathi</option>
-                <option value=mon>Mongolian</option>
-                <option value=nep>Nepali</option>
-                <option value=nno>Norwegian</option>
-                <option value=pus>Pashto</option>
-                <option value=per>Persian</option>
-                <option value=pol>Polish</option>
-                <option value=por>Portuguese</option>
-                <option value=pan>Punjabi</option>
-                <option value=rum>Romanian</option>
-                <option value=rus>Russian</option>
-                <option value=smo>Samoan</option>
-                <option value=srp>Serbian</option>
-                <option value=sna>Shona</option>
-                <option value=snd>Sindhi</option>
-                <option value=sin>Sinhala</option>
-                <option value=slo>Slovak</option>
-                <option value=slv>Slovenian</option>
-                <option value=som>Somali</option>
-                <option value=spa>Spanish</option>
-                <option value=sun>Sundanese</option>
-                <option value=swa>Swahili</option>
-                <option value=swe>Swedish</option>
-                <option value=tgk>Tajik</option>
-                <option value=tam>Tamil</option>
-                <option value=tel>Telugu</option>
-                <option value=tha>Thai</option>
-                <option value=tur>Turkish</option>
-                <option value=ukr>Ukrainian</option>
-                <option value=urd>Urdu</option>
-                <option value=uzb>Uzbek</option>
-                <option value=vie>Vietnamese</option>
-                <option value=wel>Welsh</option>
-                <option value=xho>Xhosa</option>
-                <option value=yid>Yiddish</option>
-                <option value=yor>Yoruba</option>
-                <option value=zul>Zulu</option>
-                </select>
-                </div>
-                <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon3">Title</span>
-                </div>
-                <input type="text" placeholder="ex: game of thrones" class="form-control" id="title" aria-describedby="basic-addon3">
-                </div>
-                <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                <span class="input-group-text" id="season">Season(series)</span>
-                </div>
-                <input type="text" placeholder="ex: 1" class="form-control" id="title" aria-describedby="basic-addon3">
-                </div>
+                confirmButtonText: 'Download',
+                showConfirmButton: false,
 
-                <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                <span class="input-group-text" id="episode">Episode(series)</span>
+                html: `
+                <div class="tab">
+                <button id="hashBtn" class="tablinks">Find by hash</button>
+                <button id="nameBtn" class="tablinks">Find by name</button>
                 </div>
-                <input type="text" placeholder="ex: 5" class="form-control" id="title" aria-describedby="basic-addon3">
+                <br>
+                <div id="searchSub">
+                Choose whether to search subtitles by the hash of the media file or by it's name
                 </div>
                 `,
                 preConfirm: () => {
@@ -281,46 +161,80 @@ ipc.on('movies/series', function (event, message) {
                     const title = $('#title').val();
                     const season = $('#season').val();
                     const episode = $('#episode').val();
-                    OpenSubtitles.search({
-                        sublanguageid: subLang,
-                        season: season,
-                        episode: episode,
-                        query: title,
-                        limit: '20',
-                        extensions: ['srt', 'vtt']
-                    }).then(subtitles => {
-                        console.log(subtitles);
-                        var htmlcont = `<select class="custom-select" id="subtitles" multiple>`;
-                        var subsArr = Object.keys(subtitles).map(k => subtitles[k])[0];
-                        for (let i = 0; i < subsArr.length; i++) {
-                            htmlcont += `<option value="` + subsArr[i].url + `">` + subsArr[i].filename + `</option>`
-                        }
-                        swal.fire({
-                            html: htmlcont,
-                            preConfirm: function () {
-                                const subUrl = $('#subtitles').val();
-                                ipcRenderer.send("download", {
-                                    url: subUrl,
+                    const subLangHash = $('#langHash').val();
+                    if (subLangHash) {
+                        OpenSubtitles.search({
+                            path: mediaPath,
+                            sublanguageid: subLangHash,
+                            extensions: ['srt', 'vtt']
+                        }).then(subtitles => {
+                            const subObj = Object.keys(subtitles).map(k => subtitles[k])[0];
+
+                            if (subObj) {
+                                ipc.send("download", {
+                                    url: subObj.url,
                                     properties: {
-                                        directory: mainVar.getGlobal('filePath')
+                                        directory: mediaPath.substring(0, mediaPath.lastIndexOf("/") + 1),
+                                        filename: mediaPath.substring(mediaPath.lastIndexOf("/") + 1).split('.')[0] + "." + subObj.format
                                     }
                                 });
-                            }
-                        }).then((result) => {
-                            if (result.value) {
-
+                            } else {
+                                swal.fire({
+                                    html: `<div id="err">Couldn't find subtitles for this media file by hash ! </div>`
+                                })
                             }
                         })
-                    })
-                }
-            }).then((choice) => {
-                if (choice.value) {
+                    } else if (subLang) {
+                        OpenSubtitles.search({
+                            sublanguageid: subLang,
+                            season: season,
+                            episode: episode,
+                            query: title,
+                            limit: '20',
+                            extensions: ['srt', 'vtt']
+                        }).then(subtitles => {
+                            var htmlcont = `<select class="custom-select input-sm" style="height:50%;width:100%;overflow-x: scroll;" id="subtitles" multiple>`;
+                            var subsArr = Object.keys(subtitles).map(k => subtitles[k])[0];
+                            if (subsArr) {
+                                for (let i = 0; i < subsArr.length; i++) {
+                                    htmlcont += `<option value="` + subsArr[i].url + ',' + subsArr[i].format + ',' + subsArr[i].filename + `">` + subsArr[i].filename + `</option>`
+                                }
+                                swal.fire({
+                                    html: htmlcont,
+                                    showCancelButton: true,
+                                    preConfirm: function () {
+                                        const subUrl = $('#subtitles').val()[0].split(',')[0];
+                                        ipc.send("download", {
+                                            url: subUrl,
+                                            properties: {
+                                                directory: mediaPath.substring(0, mediaPath.lastIndexOf("/") + 1),
+                                                filename: $('#subtitles').val()[0].split(',')[3]
+                                            }
+                                        });
+                                    }
+                                }).then((result) => {
+                                    if (result.value) {
 
+                                    }
+                                })
+                            } else {
+                                swal.fire({
+                                    html: `<div id="err">Couldn't find subtitles file for <br>title: ` + title + `<br> Season: ` + season + `<br> episode:` + episode + `<br>language:` + subLang + `</div>`
+                                })
+                            }
+                        })
+                    } else {
+                        swal.fire({
+                            html: `<div id="err">Couldn't find subtitles file for <br>title: ` + title + `<br> Season: ` + season + `<br> episode:` + episode + `<br>language:` + subLang + `</div>`
+                        });
+                    }
                 }
-            })
+            }).then((choice) => {})
         })
         .catch(err => {
-            console.log(err);
+            swal.fire({
+                text: err
+            });
         });
 })
 ipc.on('about', function (event, message) {
@@ -349,9 +263,9 @@ document.ondragover = document.ondrop = (ev) => {
 document.body.ondrop = (ev) => {
     drop(ev)
     mediaPath = ev.dataTransfer.files[0].path.replace(/\\/ig, '/');
-    player.vlc.play("file:///" + ev.dataTransfer.files[0].path.replace(/\\/ig, '/'))
+    player.vlc.play("file:///" + mediaPath)
     ev.preventDefault()
-    loadSubtitles(ev.dataTransfer.files[0].path);
+    loadSubtitles(mediaPath);
 }
 
 function drop(evt) {
@@ -366,7 +280,7 @@ function drop(evt) {
 function loadSubtitles(fpath) {
     var xhr = new XMLHttpRequest();
     var xhr2 = new XMLHttpRequest();
-    xhr.open('GET', "file:///" + fpath.replace(/\\/ig, '/').split(
+    xhr.open('GET', "file:///" + fpath.split(
         /(?:\.([^.]+))?$/)[0] + ".vtt");
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && this.status == 200) {
@@ -379,7 +293,7 @@ function loadSubtitles(fpath) {
     xhr2.onreadystatechange = function () {
         if (xhr2.readyState === 4 && xhr2.status == 200) {
             var webvtt = srt2webvtt(xhr2.responseText);
-            doCaptions(webvtt); // convert to vtt
+            doCaptions(webvtt);
         } else if (xhr2.readyState != 4 && xhr2.status != 200) {
             swal.fire(
                 "couldn't find subtitle file . PS: only .srt and .vtt formats are currently supported "
@@ -611,6 +525,252 @@ function doSomethingWithSelectedText() {
         });
     }
 }
+var searchByHash = `
+
+<div class="input-group mb-3">
+<div class="input-group-prepend">
+<label class="input-group-text" for="inputGroupSelect01">Subtitles language</label>
+</div>
+<select class="custom-select" id="langHash">
+<option value=afr>Afrikaans</option>
+<option value=alb>Albanian</option>
+<option value=amh>Amharic</option>
+<option value=ara>Arabic</option>
+<option value=arm>Armenian</option>
+<option value=aze>Azerbaijani</option>
+<option value=baq>Basque</option>
+<option value=bel>Belarusian</option>
+<option value=ben>Bengali</option>
+<option value=bos>Bosnian</option>
+<option value=bul>Bulgarian</option>
+<option value=cat>Catalan</option>
+<option value=ceb>Cebuano</option>
+<option value=nya>Chichewa</option>
+<option value=chi>Chinese</option>
+<option value=cos>Corsican</option>
+<option value=hrv>Croatian</option>
+<option value=cze>Czech</option>
+<option value=dan>Danish</option>
+<option value=dut>Dutch</option>
+<option value=eng selected="selected">English</option>
+<option value=epo>Esperanto</option>
+<option value=est>Estonian</option>
+<option value=fil>Filipino</option>
+<option value=fin>Finnish</option>
+<option value=fre>French</option>
+<option value=frr>Frisian</option>
+<option value=glg>Galician</option>
+<option value=geo>Georgian</option>
+<option value=ger>German</option>
+<option value=gre>Greek</option>
+<option value=guj>Gujarati</option>
+<option value=hat>Haitian Creole</option>
+<option value=hau>Hausa</option>
+<option value=haw>Hawaiian</option>
+<option value=heb>Hebrew</option>
+<option value=hin>Hindi</option>
+<option value=hmn>Hmong</option>
+<option value=hun>Hungarian</option>
+<option value=ice>Icelandic</option>
+<option value=ibo>Igbo</option>
+<option value=ind>Indonesian</option>
+<option value=gle>Irish</option>
+<option value=ita>Italian</option>
+<option value=jpn>Japanese</option>
+<option value=jav>Javanese</option>
+<option value=kan>Kannada</option>
+<option value=kaz>Kazakh</option>
+<option value=khm>Khmer</option>
+<option value=kor>Korean</option>
+<option value=kur>Kurdish (Kurmanji)</option>
+<option value=kir>Kyrgyz</option>
+<option value=lao>Lao</option>
+<option value=lat>Latin</option>
+<option value=lav>Latvian</option>
+<option value=lit>Lithuanian</option>
+<option value=ltz>Luxembourgish</option>
+<option value=mac>Macedonian</option>
+<option value=mlg>Malagasy</option>
+<option value=may>Malay</option>
+<option value=mal>Malayalam</option>
+<option value=mlt>Maltese</option>
+<option value=mao>Maori</option>
+<option value=mar>Marathi</option>
+<option value=mon>Mongolian</option>
+<option value=nep>Nepali</option>
+<option value=nno>Norwegian</option>
+<option value=pus>Pashto</option>
+<option value=per>Persian</option>
+<option value=pol>Polish</option>
+<option value=por>Portuguese</option>
+<option value=pan>Punjabi</option>
+<option value=rum>Romanian</option>
+<option value=rus>Russian</option>
+<option value=smo>Samoan</option>
+<option value=srp>Serbian</option>
+<option value=sna>Shona</option>
+<option value=snd>Sindhi</option>
+<option value=sin>Sinhala</option>
+<option value=slo>Slovak</option>
+<option value=slv>Slovenian</option>
+<option value=som>Somali</option>
+<option value=spa>Spanish</option>
+<option value=sun>Sundanese</option>
+<option value=swa>Swahili</option>
+<option value=swe>Swedish</option>
+<option value=tgk>Tajik</option>
+<option value=tam>Tamil</option>
+<option value=tel>Telugu</option>
+<option value=tha>Thai</option>
+<option value=tur>Turkish</option>
+<option value=ukr>Ukrainian</option>
+<option value=urd>Urdu</option>
+<option value=uzb>Uzbek</option>
+<option value=vie>Vietnamese</option>
+<option value=wel>Welsh</option>
+<option value=xho>Xhosa</option>
+<option value=yid>Yiddish</option>
+<option value=yor>Yoruba</option>
+<option value=zul>Zulu</option>
+</select>
+</div>
+`
+var searchByName = `
+<div class="input-group mb-3">
+<div class="input-group-prepend">
+<label class="input-group-text" for="inputGroupSelect01">Subtitles language</label>
+</div>
+<select class="custom-select" id="lang">
+<option value=afr>Afrikaans</option>
+<option value=alb>Albanian</option>
+<option value=amh>Amharic</option>
+<option value=ara>Arabic</option>
+<option value=arm>Armenian</option>
+<option value=aze>Azerbaijani</option>
+<option value=baq>Basque</option>
+<option value=bel>Belarusian</option>
+<option value=ben>Bengali</option>
+<option value=bos>Bosnian</option>
+<option value=bul>Bulgarian</option>
+<option value=cat>Catalan</option>
+<option value=ceb>Cebuano</option>
+<option value=nya>Chichewa</option>
+<option value=chi>Chinese</option>
+<option value=cos>Corsican</option>
+<option value=hrv>Croatian</option>
+<option value=cze>Czech</option>
+<option value=dan>Danish</option>
+<option value=dut>Dutch</option>
+<option value=eng selected="selected">English</option>
+<option value=epo>Esperanto</option>
+<option value=est>Estonian</option>
+<option value=fil>Filipino</option>
+<option value=fin>Finnish</option>
+<option value=fre>French</option>
+<option value=frr>Frisian</option>
+<option value=glg>Galician</option>
+<option value=geo>Georgian</option>
+<option value=ger>German</option>
+<option value=gre>Greek</option>
+<option value=guj>Gujarati</option>
+<option value=hat>Haitian Creole</option>
+<option value=hau>Hausa</option>
+<option value=haw>Hawaiian</option>
+<option value=heb>Hebrew</option>
+<option value=hin>Hindi</option>
+<option value=hmn>Hmong</option>
+<option value=hun>Hungarian</option>
+<option value=ice>Icelandic</option>
+<option value=ibo>Igbo</option>
+<option value=ind>Indonesian</option>
+<option value=gle>Irish</option>
+<option value=ita>Italian</option>
+<option value=jpn>Japanese</option>
+<option value=jav>Javanese</option>
+<option value=kan>Kannada</option>
+<option value=kaz>Kazakh</option>
+<option value=khm>Khmer</option>
+<option value=kor>Korean</option>
+<option value=kur>Kurdish (Kurmanji)</option>
+<option value=kir>Kyrgyz</option>
+<option value=lao>Lao</option>
+<option value=lat>Latin</option>
+<option value=lav>Latvian</option>
+<option value=lit>Lithuanian</option>
+<option value=ltz>Luxembourgish</option>
+<option value=mac>Macedonian</option>
+<option value=mlg>Malagasy</option>
+<option value=may>Malay</option>
+<option value=mal>Malayalam</option>
+<option value=mlt>Maltese</option>
+<option value=mao>Maori</option>
+<option value=mar>Marathi</option>
+<option value=mon>Mongolian</option>
+<option value=nep>Nepali</option>
+<option value=nno>Norwegian</option>
+<option value=pus>Pashto</option>
+<option value=per>Persian</option>
+<option value=pol>Polish</option>
+<option value=por>Portuguese</option>
+<option value=pan>Punjabi</option>
+<option value=rum>Romanian</option>
+<option value=rus>Russian</option>
+<option value=smo>Samoan</option>
+<option value=srp>Serbian</option>
+<option value=sna>Shona</option>
+<option value=snd>Sindhi</option>
+<option value=sin>Sinhala</option>
+<option value=slo>Slovak</option>
+<option value=slv>Slovenian</option>
+<option value=som>Somali</option>
+<option value=spa>Spanish</option>
+<option value=sun>Sundanese</option>
+<option value=swa>Swahili</option>
+<option value=swe>Swedish</option>
+<option value=tgk>Tajik</option>
+<option value=tam>Tamil</option>
+<option value=tel>Telugu</option>
+<option value=tha>Thai</option>
+<option value=tur>Turkish</option>
+<option value=ukr>Ukrainian</option>
+<option value=urd>Urdu</option>
+<option value=uzb>Uzbek</option>
+<option value=vie>Vietnamese</option>
+<option value=wel>Welsh</option>
+<option value=xho>Xhosa</option>
+<option value=yid>Yiddish</option>
+<option value=yor>Yoruba</option>
+<option value=zul>Zulu</option>
+</select>
+</div>
+<div class="input-group mb-3">
+<div class="input-group-prepend">
+<span class="input-group-text" id="basic-addon3">Title</span>
+</div>
+<input type="text" placeholder="ex: game of thrones" class="form-control" id="title" aria-describedby="basic-addon3">
+</div>
+<div class="input-group mb-3">
+<div class="input-group-prepend">
+<span class="input-group-text" >Season(series)</span>
+</div>
+<input type="text" placeholder="ex: 1" class="form-control" id="season" aria-describedby="basic-addon3">
+</div>
+<div class="input-group mb-3">
+<div class="input-group-prepend">
+<span class="input-group-text">Episode(series)</span>
+</div>
+<input type="text" placeholder="ex: 5" class="form-control" id="episode" aria-describedby="basic-addon3">
+</div>
+`
+$(document).on('click', "#hashBtn", function () {
+    $('#searchSub').html(searchByHash);
+    $('.swal2-confirm').show();
+
+});
+$(document).on('click', "#nameBtn", function () {
+    $('#searchSub').html(searchByName);
+    $('.swal2-confirm').show();
+});
 document.onmouseup = doSomethingWithSelectedText;
 document.onkeyup = doSomethingWithSelectedText;
 document.getElementById('video-area').onclick = function videoClicked() {

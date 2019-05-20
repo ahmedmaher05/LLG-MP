@@ -2,15 +2,20 @@ const {
   autoUpdater
 } = require("electron-updater");
 var path = require("path");
+const {
+  download
+} = require('electron-dl');
 if (process.platform == "win32" && process.env["ELECTRON_ENV"] != "development")
   process.env["VLC_PLUGIN_PATH"] = path.join(
     __dirname.substring(0, __dirname.lastIndexOf("\\") + 1),
     "\\app.asar.unpacked\\node_modules\\wcjs-prebuilt\\bin\\plugins"
   );
 
-if (process.platform == "win32" && process.env["ELECTRON_ENV"] == "development")
-  process.env["VLC_PLUGIN_PATH"] =
-  __dirname + "./node_modules/wcjs-prebuilt/bin/plugins";
+if (process.platform == "win32" && process.mainModule.filename.indexOf('app.asar') === -1)
+  process.env["VLC_PLUGIN_PATH"] = path.join(
+    __dirname,
+    "./node_modules/wcjs-prebuilt/bin/plugins"
+  );
 if (process.argv.length >= 2) {
   global.filePath = process.argv[1];
 }
@@ -43,7 +48,7 @@ const userId = nodeStorage.getItem("userid") || uuid();
 nodeStorage.setItem("userid", userId);
 global.visitor = ua("UA-138310097-1", userId);
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-const ipc = require('electron').ipcMain;
+const ipc = require("electron").ipcMain;
 var mainWindow = null;
 global.lang = {
   lang: "ar"
@@ -701,29 +706,36 @@ const menuExtYesmovies = Menu.buildFromTemplate(ExtWebsiteMenu_yesMovies);
 // initialization and ready for creating browser windows.
 //app.commandLine.appendSwitch('allow-file-access-from-files');
 app.on("ready", function () {
-  /*   proto col.interceptFileProtocol('file', (request, callback) => {
-      const url = request.url.substr(7) /* all urls start with 'file://' */
-  /*
-      callback({
-        path: path.normalize(`${__dirname}/${url}`)
-      })
-    }, (err) => {
-      if (err) console.error('Failed to register protocol', err)
-    }) */
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 600,
+    height: 600
   });
   mainWindow.loadURL("file://" + __dirname + "/MediaPl.html");
   //Menu.setApplicationMenu(menu);
+  mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
+    mainWindow.webContents.send("newwindow", {
+      event: event,
+      url: url,
+      frameName: frameName,
+      disposition: disposition,
+      options: options,
+      additionalFeatures: additionalFeatures
+    })
+  })
   mainWindow.setMenu(menuMP);
   mainWindow.openDevTools({
     detach: true
   });
   ipc.on("download", (event, info) => {
-    download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
-      .then(dl => window.webContents.send("download complete", dl.getSavePath()));
+    console.log(info)
+    download(mainWindow, info.url, info.properties).then(function (dl) {
+      console.log(dl.getSavePath());
+    }).catch(console.error)
+
+    download(BrowserWindow.getFocusedWindow(), info.url, info.properties).then(
+      dl => mainWindow.webContents.send("download complete", dl.getSavePath())
+    );
   });
 
   mainWindow.webContents.session.webRequest.onHeadersReceived({}, (d, c) => {

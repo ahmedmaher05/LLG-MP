@@ -5,6 +5,7 @@
     "version": "0.1.1",
     "main": "app.js",
     "dependencies": {
+        "electron-dl": "^1.14.0",
         "electron-google-analytics": "^0.1.0",
         "electron-log": "^3.0.5",
         "electron-updater": "^4.0.6",
