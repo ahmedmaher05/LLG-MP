@@ -16,8 +16,10 @@ if (process.platform == "win32" && process.mainModule.filename.indexOf('app.asar
     __dirname,
     "./node_modules/wcjs-prebuilt/bin/plugins"
   );
+
 if (process.argv.length >= 2) {
   global.filePath = process.argv[1];
+
 }
 const electron = require("electron");
 const {
@@ -119,6 +121,7 @@ var mediaPlayerMenu = [{
             label: "Saved Words",
             click() {
               mainWindow.setMenu(menuSavedExp);
+              mainWindow.setSize(1000, 800);
               mainWindow.loadURL("file://" + __dirname + "/newExp.html");
               mainWindow.webContents.send("newwords", "newwords");
             }
@@ -156,6 +159,13 @@ var mediaPlayerMenu = [{
         click() {
           global.lang = {
             lang: "de"
+          };
+        }
+      }, {
+        label: "Polish",
+        click() {
+          global.lang = {
+            lang: "pl"
           };
         }
       },
@@ -698,6 +708,7 @@ var savedExpMenu = [{
     ]
   }
 ];
+
 const menuMP = Menu.buildFromTemplate(mediaPlayerMenu);
 const menuSavedExp = Menu.buildFromTemplate(savedExpMenu);
 const menuExtYoutube = Menu.buildFromTemplate(ExtWebsiteMenu_youtube);
@@ -712,7 +723,6 @@ app.on("ready", function () {
     height: 600
   });
   mainWindow.loadURL("file://" + __dirname + "/MediaPl.html");
-  //Menu.setApplicationMenu(menu);
   mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
     mainWindow.webContents.send("newwindow", {
       event: event,
@@ -724,18 +734,34 @@ app.on("ready", function () {
     })
   })
   mainWindow.setMenu(menuMP);
-  mainWindow.openDevTools({
-    detach: true
-  });
+  if (process.platform == "win32" && process.mainModule.filename.indexOf('app.asar') === -1)
+    mainWindow.openDevTools({
+      detach: true
+    });
   ipc.on("download", (event, info) => {
-    console.log(info)
-    download(mainWindow, info.url, info.properties).then(function (dl) {
-      console.log(dl.getSavePath());
-    }).catch(console.error)
+    download(mainWindow, info.url, info.properties).then(function (dl) {}).catch(console.error)
 
     download(BrowserWindow.getFocusedWindow(), info.url, info.properties).then(
       dl => mainWindow.webContents.send("download complete", dl.getSavePath())
     );
+  });
+
+
+  ipc.on("newWindowOpen", (event, info) => {
+    if (info.type == "youtube") {
+      mainWindow.setMenu(menuExtYoutube);
+      mainWindow.loadURL(
+        "file://" + __dirname + "/embeddedYoutube.html"
+      );
+      mainWindow.webContents.executeJavaScript(" document.getElementById('player').src='" + info.path + "';" + `
+      ;setTimeout(function(){document.getElementById("player").contentWindow.document.getElementsByTagName('video')[0].addEventListener('loadedmetadata', function() {
+        this.currentTime = ` + (parseFloat(info.time) - 4).toString() + `;
+      }, false);},1000);
+      `);
+    } else if (info.type == "local") {
+      mainWindow.loadURL("file://" + __dirname + "/MediaPl.html");
+      mainWindow.webContents.executeJavaScript(`player.vlc.play("file:///" + "` + info.path + `");loadSubtitles("` + info.path + `");player.vlc.time=` + (parseFloat(info.time) - 10))
+    }
   });
 
   mainWindow.webContents.session.webRequest.onHeadersReceived({}, (d, c) => {

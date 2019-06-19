@@ -36,20 +36,24 @@ db.find({}, function (err, docs) {
     if (err) throw err;
     for (var i = 0; i < docs.length; i++) {
         if (docs[i].source == "youtube") {
+            var timeYoutube = Math.floor(docs[i].currentPos / (60 * 60)) + ":" + Math.floor(docs[i].currentPos / 60) + ":" + Math.floor(docs[i].currentPos);
             $("#dtableb").append(
-                "<tr role='row' class='odd'>" +
+                "<tr role='row' class='odd' >" +
                 "<td class='sorting_1'>" + docs[i].expression + "</td>" +
                 "<td>" + docs[i].translation + "</td>" +
                 "<td>" + "https://www.youtube.com/" + docs[i].mediaPath.substring(docs[i].mediaPath.lastIndexOf("/") + 1, docs[i].mediaPath.length) + "</td>" +
-                "<td>" + Math.floor(docs[i].currentPos / (60 * 60)) + ":" + Math.floor(docs[i].currentPos / 60) + ":" + Math.floor(docs[i].currentPos) + "</td> </tr>"
+                "<td>" + timeYoutube + "</td>" +
+                '<td><button type="button" class="btn btn-danger" onClick="return playMedia(\'' + "youtube" + '\',\'' + docs[i].mediaPath + '\',\'' + docs[i].currentPos + '\')" >Play</button></td></tr>'
             );
         } else if (docs[i].source == "local") {
+            var timeLocal = Math.floor(docs[i].currentPos / (1000 * 60 * 60)) + ":" + Math.floor(docs[i].currentPos / (1000 * 60)) + ":" + Math.floor(docs[i].currentPos / (1000));
             $("#dtableb").append(
                 "<tr role='row' class='odd'>" +
                 "<td>" + docs[i].expression + "</td>" +
                 "<td>" + docs[i].translation + "</td>" +
                 "<td>" + docs[i].mediaPath.substring(docs[i].mediaPath.lastIndexOf("/") + 1, docs[i].mediaPath.length) + "</td>" +
-                "<td>" + Math.floor(docs[i].currentPos / (1000 * 60 * 60)) + ":" + Math.floor(docs[i].currentPos / (1000 * 60)) + ":" + Math.floor(docs[i].currentPos / (1000)) + "</td> </tr>"
+                "<td>" + timeLocal + "</td>" +
+                '<td><button type="button" class="btn btn-primary" onClick="return playMedia(\'' + "local" + '\',\'' + docs[i].mediaPath + '\',\'' + docs[i].currentPos + '\')">Play</button></td></tr>'
             );
         }
     }
@@ -60,3 +64,20 @@ setTimeout(function () {
         $('.dataTables_length').addClass('bs-select');
     });
 }, 1000);
+
+function playMedia(type, path, time) {
+    if (type == "local") {
+        ipc.send("newWindowOpen", {
+            type: type,
+            path: path,
+            time: time
+        });
+    } else if (type == "youtube") {
+        ipc.send("newWindowOpen", {
+            type: type,
+            path: path,
+            time: time
+        });
+
+    }
+}

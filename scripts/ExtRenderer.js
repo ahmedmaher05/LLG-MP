@@ -2,7 +2,6 @@ global.lyrics = false;
 global.lyricsText = "";
 global.mediaPath = document.getElementById("player").contentWindow.location.href;
 global.currentPos = 0;
-var captionsArea = document.querySelector('.captions-area');
 var captionsDisplay = document.querySelector('.captions-display');
 global.iframeVidElm = "";
 global.cues = [];
@@ -58,23 +57,28 @@ ipc.on('lyrics', function (event, message) {
                         '') +
                     ".html",
                     function (responseText) {
-                        var elements = $.parseHTML(responseText)[44]
-                            .childNodes[1]
-                            .childNodes[5]
+
+                        let newHTMLDocument = document.implementation.createHTMLDocument();
+                        newHTMLDocument.open();
+                        newHTMLDocument.write(responseText);
+                        newHTMLDocument.close();
+                        let elements = newHTMLDocument.getElementsByClassName("col-xs-12 col-lg-8 text-center")[0];
                         for (let i = 0; i < elements.childNodes.length; i++) {
                             if (elements.childNodes[i].tagName == "DIV" && $(elements.childNodes[i]).hasClass('')) {
                                 lyrics = true;
-                                lyricsText = elements.childNodes[i];
+                                lyricsText = '<div align="left">[Keyboard media controls]<br><kbd>Left</kbd> -> Move backward<br><kbd>Right</kbd> -> Move forward<br><kbd>Space</kbd> -> Pause/Play<br><kbd>Up</kbd> -> Volume up <br><kbd>Down</kbd> -> Volume down</div><br>' + "<div class='lyrics-display' style='height:69%;overflow-y:scroll;border:2px solid orange;'>" + elements.childNodes[i].innerHTML + "</div>"
+
                                 Swal.fire({
                                     allowOutsideClick: false,
                                     allowEnterKey: false,
-                                    title: 'Use left/right/space keyboard buttons to control the video',
-                                    html: elements.childNodes[i]
+                                    html: '<div align="left">[Keyboard media controls]<br><kbd>Left</kbd> -> Move backward<br><kbd>Right</kbd> -> Move forward<br><kbd>Space</kbd> -> Pause/Play<br><kbd>Up</kbd> -> Volume up <br><kbd>Down</kbd> -> Volume down</div><br>' + "<div class='lyrics-display' style='height:69%;overflow-y:scroll;border:2px solid orange;'>" + elements.childNodes[i].innerHTML + "</div>"
                                 }).then((result) => {
                                     if (result.value) {
                                         lyrics = false;
                                     }
                                 })
+                                document.querySelector('.lyrics-display').onmouseup = doSomethingWithSelectedTextLrx;
+                                document.querySelector('.lyrics-display').onkeyup = doSomethingWithSelectedTextLrx;
                             }
                         }
                     }).fail(function () {
@@ -90,7 +94,7 @@ ipc.on('lyrics', function (event, message) {
     })
 });
 ipc.on("download complete", (event, file) => {
-    loadSubtitles(mediaPath)
+    loadSubtitles(file)
 });
 ipc.on('movies/series', function (event, message) {
     OpenSubtitles.login()
@@ -242,17 +246,18 @@ ipc.on('movies/series', function (event, message) {
                         var subsArr = Object.keys(subtitles).map(k => subtitles[k])[0];
                         if (subsArr) {
                             for (let i = 0; i < subsArr.length; i++) {
-                                htmlcont += `<option value="` + subsArr[i].url + ',' + subsArr[i].format + ',' + subsArr[i].filename + `">` + subsArr[i].filename + `</option>`
+                                htmlcont += `<option value="` + subsArr[i].url + '\\|' + subsArr[i].format + '\\|' + subsArr[i].filename + `">` + subsArr[i].filename + `</option>`
                             }
+
                             swal.fire({
                                 html: htmlcont,
                                 showCancelButton: true,
                                 preConfirm: function () {
-                                    const subUrl = $('#subtitles').val()[0].split(',')[0];
+                                    const subUrl = $('#subtitles').val()[0].split('\\|')[0];
                                     ipc.send("download", {
                                         url: subUrl,
                                         properties: {
-                                            filename: $('#subtitles').val()[0].split(',')[2]
+                                            filename: $('#subtitles').val()[0].split('\\|')[2]
                                         }
                                     });
                                 }
@@ -341,89 +346,6 @@ function clearSelection() {
     }
 }
 
-function getSelectedText() {
-    var text = "";
-    if (typeof document.getElementById("player").contentWindow.getSelection != "undefined" && document.getElementById("player").contentWindow.getSelection().anchorNode != null && document.getElementById("player").contentWindow
-        .getSelection().toString().replace(/\s/g, '')) {
-        if (iframeVidElm) {
-            currentPos = iframeVidElm.currentTime
-            iframeVidElm.pause();
-        }
-        text = document.getElementById("player").contentWindow.getSelection().toString();
-    }
-    if (typeof document.getElementById("player").contentWindow.document.selection != "undefined" && document.getElementById("player").contentWindow.document.selection.type == "Text") {
-        if (iframeVidElm) {
-            currentPos = iframeVidElm.currentTime
-            iframeVidElm.pause();
-        }
-        text = document.getElementById("player").contentWindow.document.selection.createRange().text;
-    }
-    return text;
-}
-
-function doSomethingWithSelectedText() {
-    var lang = mainVar.getGlobal('lang').lang;
-    if (!lang)
-        lang = 'ar';
-    var selectedText = getSelectedText();
-    if (selectedText) {
-        clearSelection();
-        translate(selectedText, {
-            to: lang
-        }).then(res => {
-            $(document).ready(function () {
-                Swal.fire({
-                    html: '<span>' +
-                        '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
-                        selectedText + '</span><br>' +
-                        " in " + ((lang == 'ar') ? "Arabic" : (lang ==
-                                'en') ?
-                            "English" :
-                            (lang == 'de') ? "German" : (lang == 'nl') ? "Dutch" : (lang == 'fr') ? "French" : (lang == 'hi') ? "Hindi" : (lang == 'iw') ? "Hebrew" : (lang == 'it') ? "Italian" : (lang == 'ja') ? "Japanese" : (lang == 'ru') ? "Russian" : (lang == 'es') ? "Spanish" : (lang == 'tr') ? "Turkish" : "Invalid_Lang") +
-                        " is : <br>" +
-                        '</span>' +
-                        '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
-                        res.text + '</span>'
-                }).then((result) => {
-                    Swal.fire({
-                        title: 'Do you want to save this word/phrase for future tests?',
-                        type: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Save'
-                    }).then((result) => {
-                        if (result.value) {
-                            var doc = {
-                                source: "youtube",
-                                expression: selectedText,
-                                translation: res.text,
-                                mediaPath: mediaPath,
-                                currentPos: currentPos,
-                                date: new Date()
-                            };
-                            db.insert(doc, function (err,
-                                newDoc) {
-                                if (err) throw err;
-                                Swal.fire(
-                                    'Saved!',
-                                    'the word/expression has been saved',
-                                    'success'
-                                ).then((result) => {
-                                    if (iframeVidElm) iframeVidElm.play();
-                                })
-                            });
-                        } else {
-                            if (iframeVidElm) iframeVidElm.play();
-                        }
-                    })
-                })
-            });
-            // console.log(res.from.language.iso);
-        }).catch(err => {});
-    }
-}
-
 function doSomethingWithSelectedTextLrx() {
     var lang = mainVar.getGlobal('lang').lang;
     if (!lang)
@@ -443,7 +365,7 @@ function doSomethingWithSelectedTextLrx() {
                             " in " + ((lang == 'ar') ? "Arabic" : (lang ==
                                     'en') ?
                                 "English" :
-                                (lang == 'de') ? "German" : (lang == 'nl') ? "Dutch" : (lang == 'fr') ? "French" : (lang == 'hi') ? "Hindi" : (lang == 'iw') ? "Hebrew" : (lang == 'it') ? "Italian" : (lang == 'ja') ? "Japanese" : (lang == 'ru') ? "Russian" : (lang == 'es') ? "Spanish" : (lang == 'tr') ? "Turkish" : "Invalid_Lang") +
+                                (lang == 'de') ? "German" : (lang == 'nl') ? "Dutch" : (lang == 'pl') ? "Polish" : (lang == 'fr') ? "French" : (lang == 'hi') ? "Hindi" : (lang == 'iw') ? "Hebrew" : (lang == 'it') ? "Italian" : (lang == 'ja') ? "Japanese" : (lang == 'ru') ? "Russian" : (lang == 'es') ? "Spanish" : (lang == 'tr') ? "Turkish" : "Invalid_Lang") +
                             " is : <br>" +
                             '</span>' +
                             '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
@@ -485,6 +407,8 @@ function doSomethingWithSelectedTextLrx() {
                                                     lyrics = false;
                                                 }
                                             })
+                                            document.querySelector('.lyrics-display').onmouseup = doSomethingWithSelectedTextLrx;
+                                            document.querySelector('.lyrics-display').onkeyup = doSomethingWithSelectedTextLrx;
                                         }
                                     })
                                 });
@@ -498,6 +422,8 @@ function doSomethingWithSelectedTextLrx() {
                                         lyrics = false;
                                     }
                                 })
+                                document.querySelector('.lyrics-display').onmouseup = doSomethingWithSelectedTextLrx;
+                                document.querySelector('.lyrics-display').onkeyup = doSomethingWithSelectedTextLrx;
                                 if (iframeVidElm) iframeVidElm.play();
                             }
                         })
@@ -510,7 +436,7 @@ function doSomethingWithSelectedTextLrx() {
                             " in " + ((lang == 'ar') ? "Arabic" : (lang ==
                                     'en') ?
                                 "English" :
-                                (lang == 'de') ? "German" : (lang == 'nl') ? "Dutch" : (lang == 'fr') ? "French" : (lang == 'hi') ? "Hindi" : (lang == 'iw') ? "Hebrew" : (lang == 'it') ? "Italian" : (lang == 'ja') ? "Japanese" : (lang == 'ru') ? "Russian" : (lang == 'es') ? "Spanish" : (lang == 'tr') ? "Turkish" : "Invalid_Lang") +
+                                (lang == 'de') ? "German" : (lang == 'nl') ? "Dutch" : (lang == 'pl') ? "Polish" : (lang == 'fr') ? "French" : (lang == 'hi') ? "Hindi" : (lang == 'iw') ? "Hebrew" : (lang == 'it') ? "Italian" : (lang == 'ja') ? "Japanese" : (lang == 'ru') ? "Russian" : (lang == 'es') ? "Spanish" : (lang == 'tr') ? "Turkish" : "Invalid_Lang") +
                             " is : <br>" +
                             '</span>' +
                             '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
@@ -582,18 +508,36 @@ function clearSelectionLrx() {
     }
 }
 
+function drop(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    var vidUrl = evt.dataTransfer.getData('text/html');
+    var rex = /src="?([^"\s]+)"?\s*/;
+    var url, res;
+    url = rex.exec(vidUrl);
+}
 if (document.getElementById("player").contentWindow.document.getElementsByTagName('video')[0]) {
     iframeVidElm = document.getElementById("player").contentWindow.document.getElementsByTagName('video')[0]
+    iframeVidElm.focus();
 }
 if (document.getElementById("player").contentWindow.document.getElementById("iframe-embed")) {
     if (document.getElementById("player").contentWindow.document.getElementById("iframe-embed").contentWindow.document.getElementsByTagName('video')[0]) {
-        iframeVidElm = document.getElementById("player").contentWindow.document.getElementById("iframe-embed").contentWindow.document.getElementsByTagName('video')[0]
+        iframeVidElm = document.getElementById("player").contentWindow.document.getElementById("iframe-embed").contentWindow.document.getElementsByTagName('video')[0];
+        iframeVidElm.focus();
     }
 }
-document.getElementById("player").contentWindow.document.onmouseup = doSomethingWithSelectedText;
-$(document).on('mouseup', 'body', function () {
-    doSomethingWithSelectedTextLrx();
-});
+document.querySelector('.captions-display').onmouseup = doSomethingWithSelectedTextLrx;
+document.querySelector('.captions-display').onkeyup = doSomethingWithSelectedTextLrx;
+
+document.getElementById("player").contentWindow.document.ondragover = document.getElementById("player").contentWindow.document.ondrop = (ev) => {
+    ev.preventDefault()
+}
+document.getElementById("player").contentWindow.document.ondrop = (ev) => {
+    doCaptions("");
+    var subPath = ev.dataTransfer.files[0].path.replace(/\\/ig, '/');
+    ev.preventDefault()
+    loadSubtitles(subPath);
+}
 if (iframeVidElm) {
     var video = iframeVidElm
     video.addEventListener('timeupdate', function () {
@@ -616,9 +560,13 @@ if (iframeVidElm) {
         if (evt.which == 39) {
             iframeVidElm.currentTime = iframeVidElm.currentTime + 5;
         }
-    }).keyup(function (evt) {
-        if (evt.which == 17) {
-            // ctrlPressed = false;
+        if (evt.which == 38) {
+            if (iframeVidElm.volume < .9)
+                iframeVidElm.volume += .1;
         }
-    });
+        if (evt.which == 40) {
+            if (iframeVidElm.volume > .1)
+                iframeVidElm.volume -= .1;
+        }
+    }).keyup(function (evt) {});
 }

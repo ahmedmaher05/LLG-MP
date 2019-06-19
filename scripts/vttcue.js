@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-(function(root) {
+(function (root) {
 
   var autoKeyword = "auto";
   var directionSetting = {
@@ -101,30 +101,30 @@
 
     Object.defineProperty(cue,
       "id", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _id;
         },
-        set: function(value) {
+        set: function (value) {
           _id = "" + value;
         }
       }));
 
     Object.defineProperty(cue,
       "pauseOnExit", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _pauseOnExit;
         },
-        set: function(value) {
+        set: function (value) {
           _pauseOnExit = !!value;
         }
       }));
 
     Object.defineProperty(cue,
       "startTime", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _startTime;
         },
-        set: function(value) {
+        set: function (value) {
           if (typeof value !== "number") {
             throw new TypeError("Start time must be set to a number.");
           }
@@ -135,10 +135,10 @@
 
     Object.defineProperty(cue,
       "endTime", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _endTime;
         },
-        set: function(value) {
+        set: function (value) {
           if (typeof value !== "number") {
             throw new TypeError("End time must be set to a number.");
           }
@@ -149,10 +149,10 @@
 
     Object.defineProperty(cue,
       "text", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _text;
         },
-        set: function(value) {
+        set: function (value) {
           _text = "" + value;
           this.hasBeenReset = true;
         }
@@ -160,10 +160,10 @@
 
     Object.defineProperty(cue,
       "region", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _region;
         },
-        set: function(value) {
+        set: function (value) {
           _region = value;
           this.hasBeenReset = true;
         }
@@ -171,10 +171,10 @@
 
     Object.defineProperty(cue,
       "vertical", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _vertical;
         },
-        set: function(value) {
+        set: function (value) {
           var setting = findDirectionSetting(value);
           // Have to check for false because the setting an be an empty string.
           if (setting === false) {
@@ -187,10 +187,10 @@
 
     Object.defineProperty(cue,
       "snapToLines", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _snapToLines;
         },
-        set: function(value) {
+        set: function (value) {
           _snapToLines = !!value;
           this.hasBeenReset = true;
         }
@@ -198,10 +198,10 @@
 
     Object.defineProperty(cue,
       "line", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _line;
         },
-        set: function(value) {
+        set: function (value) {
           if (typeof value !== "number" && value !== autoKeyword) {
             throw new SyntaxError("An invalid number or illegal string was specified.");
           }
@@ -212,10 +212,10 @@
 
     Object.defineProperty(cue,
       "lineAlign", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _lineAlign;
         },
-        set: function(value) {
+        set: function (value) {
           var setting = findAlignSetting(value);
           if (!setting) {
             throw new SyntaxError("An invalid or illegal string was specified.");
@@ -227,10 +227,10 @@
 
     Object.defineProperty(cue,
       "position", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _position;
         },
-        set: function(value) {
+        set: function (value) {
           if (value < 0 || value > 100) {
             throw new Error("Position must be between 0 and 100.");
           }
@@ -241,10 +241,10 @@
 
     Object.defineProperty(cue,
       "positionAlign", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _positionAlign;
         },
-        set: function(value) {
+        set: function (value) {
           var setting = findAlignSetting(value);
           if (!setting) {
             throw new SyntaxError("An invalid or illegal string was specified.");
@@ -256,10 +256,10 @@
 
     Object.defineProperty(cue,
       "size", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _size;
         },
-        set: function(value) {
+        set: function (value) {
           if (value < 0 || value > 100) {
             throw new Error("Size must be between 0 and 100.");
           }
@@ -270,10 +270,10 @@
 
     Object.defineProperty(cue,
       "align", extend({}, baseObj, {
-        get: function() {
+        get: function () {
           return _align;
         },
-        set: function(value) {
+        set: function (value) {
           var setting = findAlignSetting(value);
           if (!setting) {
             throw new SyntaxError("An invalid or illegal string was specified.");
@@ -299,7 +299,7 @@
    * VTTCue methods
    */
 
-  VTTCue.prototype.getCueAsHTML = function() {
+  VTTCue.prototype.getCueAsHTML = function () {
     // Assume WebVTT.convertCueToDOMTree is on the global.
     return WebVTT.convertCueToDOMTree(window, this.text);
   };

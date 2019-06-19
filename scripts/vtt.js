@@ -272,7 +272,7 @@
       cue.lineAlign = settings.get("lineAlign", "start");
       cue.snapToLines = settings.get("snapToLines", true);
       cue.size = settings.get("size", 100);
-      cue.align = settings.get("align", "center");
+      //cue.align = settings.get("align", "center");
       cue.position = settings.get("position", "auto");
       cue.positionAlign = settings.get("positionAlign", {
         start: "start",
@@ -1354,43 +1354,43 @@
               }
               // Process line as start of a cue.
               /*falls through*/
-            case "CUE":
-              // 40 - Collect cue timings and settings.
-              try {
-                parseCue(line, self.cue, self.regionList);
-              } catch (e) {
-                self.reportOrThrowError(e);
-                // In case of an error ignore rest of the cue.
-                self.cue = null;
-                self.state = "BADCUE";
+              case "CUE":
+                // 40 - Collect cue timings and settings.
+                try {
+                  parseCue(line, self.cue, self.regionList);
+                } catch (e) {
+                  self.reportOrThrowError(e);
+                  // In case of an error ignore rest of the cue.
+                  self.cue = null;
+                  self.state = "BADCUE";
+                  continue;
+                }
+                self.state = "CUETEXT";
                 continue;
-              }
-              self.state = "CUETEXT";
-              continue;
-            case "CUETEXT":
-              var hasSubstring = line.indexOf("-->") !== -1;
-              // 34 - If we have an empty line then report the cue.
-              // 35 - If we have the special substring '-->' then report the cue,
-              // but do not collect the line as we need to process the current
-              // one as a new cue.
-              if (!line || hasSubstring && (alreadyCollectedLine = true)) {
-                // We are done parsing self cue.
-                self.oncue && self.oncue(self.cue);
-                self.cue = null;
-                self.state = "ID";
+              case "CUETEXT":
+                var hasSubstring = line.indexOf("-->") !== -1;
+                // 34 - If we have an empty line then report the cue.
+                // 35 - If we have the special substring '-->' then report the cue,
+                // but do not collect the line as we need to process the current
+                // one as a new cue.
+                if (!line || hasSubstring && (alreadyCollectedLine = true)) {
+                  // We are done parsing self cue.
+                  self.oncue && self.oncue(self.cue);
+                  self.cue = null;
+                  self.state = "ID";
+                  continue;
+                }
+                if (self.cue.text) {
+                  self.cue.text += "\n";
+                }
+                self.cue.text += line;
                 continue;
-              }
-              if (self.cue.text) {
-                self.cue.text += "\n";
-              }
-              self.cue.text += line;
-              continue;
-            case "BADCUE": // BADCUE
-              // 54-62 - Collect and discard the remaining cue.
-              if (!line) {
-                self.state = "ID";
-              }
-              continue;
+              case "BADCUE": // BADCUE
+                // 54-62 - Collect and discard the remaining cue.
+                if (!line) {
+                  self.state = "ID";
+                }
+                continue;
           }
         }
       } catch (e) {

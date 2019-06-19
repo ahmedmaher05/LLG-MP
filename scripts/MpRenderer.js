@@ -47,6 +47,11 @@ ipc.on('updateProgress', function (event, message) {
 ipc.on('installingUPdate', function (event, message) {
     swal.fire(message);
 })
+if (mainVar.getGlobal('filePath')) {
+    player.vlc.play("file:///" + mainVar.getGlobal('filePath'))
+    mediaPath = mainVar.getGlobal('filePath').replace(/\\/ig, '/');
+    loadSubtitles(mediaPath)
+}
 ipc.on('openmedia', function (event, message) {
     Swal.fire({
         title: 'Select media file',
@@ -105,22 +110,27 @@ ipc.on('lyrics', function (event, message) {
                         '') +
                     ".html",
                     function (responseText) {
-                        var elements = $.parseHTML(responseText)[44]
-                            .childNodes[1]
-                            .childNodes[5]
+                        let newHTMLDocument = document.implementation.createHTMLDocument();
+                        newHTMLDocument.open();
+                        newHTMLDocument.write(responseText);
+                        newHTMLDocument.close();
+                        let elements = newHTMLDocument.getElementsByClassName("col-xs-12 col-lg-8 text-center")[0];
                         for (let i = 0; i < elements.childNodes.length; i++) {
                             if (elements.childNodes[i].tagName == "DIV" && $(elements.childNodes[i]).hasClass('')) {
                                 lyrics = true;
-                                lyricsText = elements.childNodes[i];
+                                lyricsText = '<div align="left">[Keyboard media controls]<br><kbd>Left</kbd> -> Move backward<br><kbd>Right</kbd> -> Move forward<br><kbd>Space</kbd> -> Pause/Play<br><kbd>Up</kbd> -> Volume up <br><kbd>Down</kbd> -> Volume down</div><br>' + "<div class='lyrics-display'style='height:69%;overflow-y:scroll;border:2px solid orange;'>" + elements.childNodes[i].innerHTML + "</div>"
                                 Swal.fire({
                                     allowOutsideClick: false,
                                     allowEnterKey: false,
-                                    html: elements.childNodes[i]
+                                    html: '<div align="left">[Keyboard media controls]<br><kbd>Left</kbd> -> Move backward<br><kbd>Right</kbd> -> Move forward<br><kbd>Space</kbd> -> Pause/Play<br><kbd>Up</kbd> -> Volume up <br><kbd>Down</kbd> -> Volume down</div><br>' + "<div class='lyrics-display'style='height:69%;overflow-y:scroll;border:2px solid orange;'>" + elements.childNodes[i].innerHTML + "</div>"
                                 }).then((result) => {
                                     if (result.value) {
                                         lyrics = false;
                                     }
+
                                 })
+                                document.querySelector('.lyrics-display').onmouseup = doSomethingWithSelectedText;
+                                document.querySelector('.lyrics-display').onkeyup = doSomethingWithSelectedText;
                             }
                         }
                     }).fail(function () {
@@ -134,6 +144,8 @@ ipc.on('lyrics', function (event, message) {
             })
         }
     })
+
+
 });
 ipc.on("download complete", (event, file) => {
     loadSubtitles(mediaPath)
@@ -169,7 +181,6 @@ ipc.on('movies/series', function (event, message) {
                             extensions: ['srt', 'vtt']
                         }).then(subtitles => {
                             const subObj = Object.keys(subtitles).map(k => subtitles[k])[0];
-
                             if (subObj) {
                                 ipc.send("download", {
                                     url: subObj.url,
@@ -197,18 +208,18 @@ ipc.on('movies/series', function (event, message) {
                             var subsArr = Object.keys(subtitles).map(k => subtitles[k])[0];
                             if (subsArr) {
                                 for (let i = 0; i < subsArr.length; i++) {
-                                    htmlcont += `<option value="` + subsArr[i].url + ',' + subsArr[i].format + ',' + subsArr[i].filename + `">` + subsArr[i].filename + `</option>`
+                                    htmlcont += `<option value="` + subsArr[i].url + '\\|' + subsArr[i].format + '\\|' + subsArr[i].filename + `">` + subsArr[i].filename + `</option>`
                                 }
                                 swal.fire({
                                     html: htmlcont,
                                     showCancelButton: true,
                                     preConfirm: function () {
-                                        const subUrl = $('#subtitles').val()[0].split(',')[0];
+                                        const subUrl = $('#subtitles').val()[0].split('\\|')[0];
                                         ipc.send("download", {
                                             url: subUrl,
                                             properties: {
                                                 directory: mediaPath.substring(0, mediaPath.lastIndexOf("/") + 1),
-                                                filename: $('#subtitles').val()[0].split(',')[3]
+                                                filename: mediaPath.substring(mediaPath.lastIndexOf("/") + 1).split('.')[0] + "." + $('#subtitles').val()[0].split('\\|')[1]
                                             }
                                         });
                                     }
@@ -262,10 +273,20 @@ document.ondragover = document.ondrop = (ev) => {
 }
 document.body.ondrop = (ev) => {
     drop(ev)
-    mediaPath = ev.dataTransfer.files[0].path.replace(/\\/ig, '/');
-    player.vlc.play("file:///" + mediaPath)
-    ev.preventDefault()
-    loadSubtitles(mediaPath);
+    if (ev.dataTransfer.files[0].path.split('.').pop() != "srt" && ev.dataTransfer.files[0].path.split('.').pop() != "vtt") {
+        doCaptions("");
+        mediaPath = ev.dataTransfer.files[0].path.replace(/\\/ig, '/');
+        player.vlc.play("file:///" + mediaPath)
+        document.querySelectorAll('.wcp-button', '.wcp-left')[1].setAttribute("class", "wcp-button wcp-left wcp-pause")
+        ev.preventDefault();
+        loadSubtitles(mediaPath);
+    } else {
+        doCaptions("");
+        mediaPath = ev.dataTransfer.files[0].path.replace(/\\/ig, '/');
+        ev.preventDefault()
+        loadSubtitles(mediaPath);
+    }
+
 }
 
 function drop(evt) {
@@ -412,7 +433,7 @@ function doSomethingWithSelectedText() {
                             " in " + ((lang == 'ar') ? "Arabic" : (lang ==
                                     'en') ?
                                 "English" :
-                                (lang == 'de') ? "German" : (lang == 'nl') ? "Dutch" : (lang == 'fr') ? "French" : (lang == 'hi') ? "Hindi" : (lang == 'iw') ? "Hebrew" : (lang == 'it') ? "Italian" : (lang == 'ja') ? "Japanese" : (lang == 'ru') ? "Russian" : (lang == 'es') ? "Spanish" : (lang == 'tr') ? "Turkish" : "Invalid_Lang") +
+                                (lang == 'de') ? "German" : (lang == 'nl') ? "Dutch" : (lang == 'pl') ? "Polish" : (lang == 'fr') ? "French" : (lang == 'hi') ? "Hindi" : (lang == 'iw') ? "Hebrew" : (lang == 'it') ? "Italian" : (lang == 'ja') ? "Japanese" : (lang == 'ru') ? "Russian" : (lang == 'es') ? "Spanish" : (lang == 'tr') ? "Turkish" : "Invalid_Lang") +
                             " is : <br>" +
                             '</span>' +
                             '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
@@ -453,6 +474,8 @@ function doSomethingWithSelectedText() {
                                                     lyrics = false;
                                                 }
                                             })
+                                            document.querySelector('.lyrics-display').onmouseup = doSomethingWithSelectedText;
+                                            document.querySelector('.lyrics-display').onkeyup = doSomethingWithSelectedText;
                                         }
                                     })
                                 });
@@ -467,6 +490,8 @@ function doSomethingWithSelectedText() {
                                         lyrics = false;
                                     }
                                 })
+                                document.querySelector('.lyrics-display').onmouseup = doSomethingWithSelectedText;
+                                document.querySelector('.lyrics-display').onkeyup = doSomethingWithSelectedText;
                                 player.play();
                             }
                         })
@@ -479,7 +504,7 @@ function doSomethingWithSelectedText() {
                             " in " + ((lang == 'ar') ? "Arabic" : (lang ==
                                     'en') ?
                                 "English" :
-                                (lang == 'de') ? "German" : (lang == 'nl') ? "Dutch" : (lang == 'fr') ? "French" : (lang == 'hi') ? "Hindi" : (lang == 'iw') ? "Hebrew" : (lang == 'it') ? "Italian" : (lang == 'ja') ? "Japanese" : (lang == 'ru') ? "Russian" : (lang == 'es') ? "Spanish" : (lang == 'tr') ? "Turkish" : "Invalid_Lang") +
+                                (lang == 'de') ? "German" : (lang == 'nl') ? "Dutch" : (lang == 'pl') ? "Polish" : (lang == 'fr') ? "French" : (lang == 'hi') ? "Hindi" : (lang == 'iw') ? "Hebrew" : (lang == 'it') ? "Italian" : (lang == 'ja') ? "Japanese" : (lang == 'ru') ? "Russian" : (lang == 'es') ? "Spanish" : (lang == 'tr') ? "Turkish" : "Invalid_Lang") +
                             " is : <br>" +
                             '</span>' +
                             '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
@@ -765,29 +790,11 @@ var searchByName = `
 $(document).on('click', "#hashBtn", function () {
     $('#searchSub').html(searchByHash);
     $('.swal2-confirm').show();
-
 });
 $(document).on('click', "#nameBtn", function () {
     $('#searchSub').html(searchByName);
     $('.swal2-confirm').show();
 });
-document.onmouseup = doSomethingWithSelectedText;
-document.onkeyup = doSomethingWithSelectedText;
-document.getElementById('video-area').onclick = function videoClicked() {
-    player.togglePause();
-}
-$(document).keydown(function (evt) {
-    if (evt.which == 32) {
-        player.togglePause();
-    }
-    if (evt.which == 37) {
-        player.time(player.time() - 5000);
-    }
-    if (evt.which == 39) {
-        player.time(player.time() + 5000);
-    }
-}).keyup(function (evt) {
-    if (evt.which == 17) {
-        // ctrlPressed = false;
-    }
-});
+
+captionsDisplay.onmouseup = doSomethingWithSelectedText;
+captionsDisplay.onkeyup = doSomethingWithSelectedText;
