@@ -550,8 +550,8 @@ if (iframeVidElm) {
     $(document).on('keyup', 'body', function (evt) {
         if (evt.which == 32 && iframeVidElm.paused) {
             iframeVidElm.play();
-        } else if (evt.which == 32 && !iframeVidElm.paused) {
-
+        }
+        else if (evt.which == 32 && !iframeVidElm.paused) {
             iframeVidElm.pause();
         }
         if (evt.which == 37) {
