@@ -5,7 +5,7 @@
 <br>
 Language Learning Gamification Media Player 
 
-* Version [0.1.3] --> [(public releases).(beta versions).(bugfixes patches)]
+* Version [0.1.4] --> [(public releases).(beta versions).(bugfixes patches)]
 
 * This software is under  AGPLv3 license 
 
