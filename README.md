@@ -71,12 +71,13 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 - [x] Customization of Mozilla's implementation of WEBVTT standard library for making subtitles clickable
 - [x] Interception/customization of sent http headers to overcome same origin regulation from youtube 
 - [x] Dom tree traversal for detection of yesmovies players nested iframes 
-- [x] Drag&drop  
+- [x] Drag&drop media and subtitle files
 - [x] Youtube/yesmovies integration 
 - [x] Using <a href="https://github.com/louischatriot/nedb">NEDB</a> for new words/expressions storage
 - [x] Integration with <a href="https://www.azlyrics.com/">azlyrics</a> for fetching songs lyrics by song & singer names
 - [x] Implementing a simple route traffic detector feedback using google analytics to user behavior anonimously for future modifications
 - [x] Opensubtitles integration 
+- [x] opening media at saved words occurrence 
 - [ ] Implementation of user authentication system & synchronization between different instances of LLG-MP for group learning remotely  
 - [ ] Adding a torrent client 
 - [ ] Making the media player cross platform and signing it in both appstore and windows store 
