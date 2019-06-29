@@ -1,11 +1,11 @@
-# LLG-MP 0.1.0
+# LLG-MP 0.1.3
 
 ![alt tag](https://i.imgur.com/kDqOC8w.png)
 <br>
 <br>
 Language Learning Gamification Media Player 
 
-* Version [0.1.0] --> [(public releases).(beta versions).(bugfixes patches)]
+* Version [0.1.3] --> [(public releases).(beta versions).(bugfixes patches)]
 
 * This software is under  AGPLv3 license 
 
@@ -53,7 +53,7 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 
 ![alt tag](https://i.imgur.com/ViVFC77.png)
 ![alt tag](https://i.imgur.com/4BEHrJW.png)
-![alt tag](https://i.imgur.com/XgRXKxt.png)
+![alt tag](https://i.imgur.com/jnnGA5e.png)
 ![alt tag](https://i.imgur.com/bqdMadp.png)
 
 ![alt tag](https://i.imgur.com/lswdkXP.png)
@@ -64,17 +64,20 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 ![alt tag](https://i.imgur.com/7WhhdpD.png)
 ![alt tag](https://i.imgur.com/DoWVE63.png)
 ![alt tag](https://i.imgur.com/EGehypU.png)
+![alt tag](https://i.imgur.com/IfFDWKe.png)
+
 
 ## TODO list(features) 
 - [x] Customization of Mozilla's implementation of WEBVTT standard library for making subtitles clickable
 - [x] Interception/customization of sent http headers to overcome same origin regulation from youtube 
 - [x] Dom tree traversal for detection of yesmovies players nested iframes 
-- [x] Drag&drop  
+- [x] Drag&drop media and subtitle files
 - [x] Youtube/yesmovies integration 
 - [x] Using <a href="https://github.com/louischatriot/nedb">NEDB</a> for new words/expressions storage
 - [x] Integration with <a href="https://www.azlyrics.com/">azlyrics</a> for fetching songs lyrics by song & singer names
 - [x] Implementing a simple route traffic detector feedback using google analytics to user behavior anonimously for future modifications
 - [x] Opensubtitles integration 
+- [x] opening media at saved words occurrence 
 - [ ] Implementation of user authentication system & synchronization between different instances of LLG-MP for group learning remotely  
 - [ ] Adding a torrent client 
 - [ ] Making the media player cross platform and signing it in both appstore and windows store 
