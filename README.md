@@ -53,7 +53,7 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 
 ![alt tag](https://i.imgur.com/ViVFC77.png)
 ![alt tag](https://i.imgur.com/4BEHrJW.png)
-![alt tag](https://i.imgur.com/XgRXKxt.png)
+![alt tag](https://i.imgur.com/jnnGA5e.png)
 ![alt tag](https://i.imgur.com/bqdMadp.png)
 
 ![alt tag](https://i.imgur.com/lswdkXP.png)
@@ -64,6 +64,8 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 ![alt tag](https://i.imgur.com/7WhhdpD.png)
 ![alt tag](https://i.imgur.com/DoWVE63.png)
 ![alt tag](https://i.imgur.com/EGehypU.png)
+![alt tag](https://i.imgur.com/IfFDWKe.png)
+
 
 ## TODO list(features) 
 - [x] Customization of Mozilla's implementation of WEBVTT standard library for making subtitles clickable
