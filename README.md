@@ -45,26 +45,12 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
                            ``` electron . ```
                         
 
-## pictures from LLG media player 
+## [Demo youtube playlist demonstrating how to use LLG media player](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1)
 
-![alt tag](https://i.imgur.com/S9TQn4w.png)
-![alt tag](https://i.imgur.com/ZWXoQ2t.png)
-![alt tag](https://i.imgur.com/eKaPn6N.png)
+[![Watch the video](https://i.imgur.com/QSuecRg.png)](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1)
 
-![alt tag](https://i.imgur.com/ViVFC77.png)
-![alt tag](https://i.imgur.com/4BEHrJW.png)
-![alt tag](https://i.imgur.com/jnnGA5e.png)
-![alt tag](https://i.imgur.com/bqdMadp.png)
-
-![alt tag](https://i.imgur.com/lswdkXP.png)
-![alt tag](https://i.imgur.com/roi4ovt.png)
-![alt tag](https://i.imgur.com/dn2xEqS.png)
-
-![alt tag](https://i.imgur.com/JgZYGSl.png)
-![alt tag](https://i.imgur.com/7WhhdpD.png)
-![alt tag](https://i.imgur.com/DoWVE63.png)
-![alt tag](https://i.imgur.com/EGehypU.png)
-![alt tag](https://i.imgur.com/IfFDWKe.png)
+## Pictures from the media player 
+![image not found](https://i.imgur.com/lbv4xl6.jpg)
 
 
 ## TODO list(features) 
