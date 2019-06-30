@@ -50,7 +50,7 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 [![Watch the video](https://i.imgur.com/QSuecRg.png)](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1)
 
 ## Pictures from the media player 
-[![image not found](https://i.imgur.com/lbv4xl6.jpg)]
+![image not found](https://i.imgur.com/lbv4xl6.jpg)
 
 
 ## TODO list(features) 
