@@ -47,7 +47,7 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 
 ## [Demo youtube playlist showing how to use LLG media player](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1)
 
-[![Watch the video](https://img.youtube.com/vi/irOc8Un86pM/0.jpg)](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1)
+[![Watch the video](https://i.imgur.com/QSuecRg.png)](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1)
 
 
 
