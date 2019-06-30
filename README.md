@@ -45,9 +45,9 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
                            ``` electron . ```
                         
 
-## Demo playlist on youtube on how to use LLG media player 
+## Demo youtube playlist showing how to use LLG media player  
+[![Watch the video](https://img.youtube.com/vi/irOc8Un86pM/0.jpg)](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1)
 
-[![image not found](https://img.youtube.com/vi/11xjRgIjHMU/0.jpg)](https://www.youtube.com/watch?v=fyx5-3gbChk&list=PLElD1l78qwgoqa3OSsm_EWC03DCiLWXDS)
 
 
 ## TODO list(features) 
