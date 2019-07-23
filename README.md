@@ -52,6 +52,10 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 ## Pictures from the media player 
 ![image not found](https://i.imgur.com/lbv4xl6.jpg)
 
+## Users anonymous heat map generated via google analytics 
+![image not found](https://i.imgur.com/ADLOcOQ.png)
+
+
 
 ## TODO list(features) 
 - [x] Customization of Mozilla's implementation of WEBVTT standard library for making subtitles clickable
