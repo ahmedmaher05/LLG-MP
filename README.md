@@ -53,7 +53,7 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 ![image not found](https://i.imgur.com/lbv4xl6.jpg)
 
 ## Users anonymous heat map generated via google analytics 
-![image not found](https://i.imgur.com/ADLOcOQ.png)
+![image not found](https://i.imgur.com/QXpaCzQ.png)
 
 
 
