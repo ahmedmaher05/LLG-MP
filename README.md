@@ -73,8 +73,10 @@ the clickable subtitles/lyrics functionality is performed through the manipulati
 - [ ] Making the media player cross platform and signing it in both appstore and windows store 
 
 ## Contributing
+- For developers : you can send pull requests with TODO features implementation and fix issues opened by users
+- For users : you can test the executable and file issues and request features 
 
-Please read [CONTRIBUTING.md](https://gist.github.com/engMaher/6a6080973f2c7be7285aeec17bce4c56) for details on our code of conduct, and the process for submitting pull requests to us.
+For more information please read [CONTRIBUTING.md](https://gist.github.com/engMaher/6a6080973f2c7be7285aeec17bce4c56) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Acknowledgments
 
