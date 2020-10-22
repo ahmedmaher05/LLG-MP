@@ -19,7 +19,7 @@
 // forth between JSON. If we don't then it's not that big of a deal since we're
 // off browser.
 module.exports = {
-  WebVTT: require("./vtt.js").WebVTT,
-  VTTCue: require("./vttcue-extended.js").VTTCue,
-  VTTRegion: require("./vttregion-extended.js").VTTRegion
-};
+  WebVTT: require('./vtt.js').WebVTT,
+  VTTCue: require('./vttcue-extended.js').VTTCue,
+  VTTRegion: require('./vttregion-extended.js').VTTRegion
+}

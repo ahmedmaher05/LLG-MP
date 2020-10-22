@@ -4,3 +4,13 @@ body {
     overflow-x: hidden;
     overflow-y: hidden;
 }
+
+#dtBasicExample_wrapper{
+    height: 100%;
+    overflow:scroll;
+}
+
+#tableContent{
+    height:100%;
+    padding: 10px;
+}

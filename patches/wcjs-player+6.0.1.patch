@@ -1,0 +1,35 @@
+diff --git a/node_modules/wcjs-player/index.js b/node_modules/wcjs-player/index.js
+index 1a3a503..f1364f3 100644
+--- a/node_modules/wcjs-player/index.js
++++ b/node_modules/wcjs-player/index.js
+@@ -348,7 +348,6 @@ wjs.prototype.addPlayer = function(wcpSettings) {
+             wjsPlayer.toggleFullscreen();
+         }
+     });
+-
+     wjs(newid).wrapper.parent().bind("mousemove",function(e) {
+         wjsPlayer = getContext(this);
+         if (opts[wjsPlayer.context].uiHidden === false) {
+@@ -375,7 +374,7 @@ wjs.prototype.addPlayer = function(wcpSettings) {
+                 wjsPlayer.find(".wcp-toolbar").stop().show(0);
+                 if (!volDrag && !seekDrag) {
+                     if ($(wjsPlayer.find(".wcp-toolbar").selector + ":hover").length > 0) {
+-                        vlcs[wjsPlayer.context].hideUI = setTimeout(function(i) { return function() { hideUI.call(players[i]); } }(wjsPlayer.context),3000);
++                        vlcs[wjsPlayer.context].hideUI = setTimeout(function(i) { return function() {  } }(wjsPlayer.context),3000);
+                         vlcs[wjsPlayer.context].timestampUI = Math.floor(Date.now() / 1000);
+                     } else vlcs[wjsPlayer.context].hideUI = setTimeout(function(i) { return function() { hideUI.call(players[i]); } }(wjsPlayer.context),3000);
+                 }
+@@ -1513,11 +1512,11 @@ function hideUI() {
+             return;
+         }
+         if (window.document.webkitFullscreenElement == null) {
+-            if (["both","minimized"].indexOf(opts[this.context].titleBar) > -1) this.find(".wcp-titlebar").stop().fadeOut();
++            //if (["both","minimized"].indexOf(opts[this.context].titleBar) > -1) this.find(".wcp-titlebar").stop().fadeOut();
+         } else {
+             if (["both","fullscreen"].indexOf(opts[this.context].titleBar) > -1) this.find(".wcp-titlebar").stop().fadeOut();
+         }
+-        this.find(".wcp-toolbar").stop().fadeOut();
++        //this.find(".wcp-toolbar").stop().fadeOut();
+         this.find(".wcp-tooltip").stop().fadeOut();
+         this.wrapper.css({cursor: 'none'});
+     }

@@ -1,108 +1,107 @@
-global.lyrics = false;
-global.lyricsText = "";
-global.mediaPath = document.getElementById("player").contentWindow.location.href;
-global.currentPos = 0;
-var captionsDisplay = document.querySelector('.captions-display');
-global.iframeVidElm = "";
-global.cues = [];
-var regions = [];
+global.lyrics = false
+global.lyricsText = ''
+global.mediaPath = document.getElementById('player').contentWindow.location.href
+global.currentPos = 0
+var captionsDisplay = document.querySelector('.captions-display')
+global.iframeVidElm = ''
+global.cues = []
+var regions = []
 ipc.on('newwindow', function (event, message) {
-    //console.log("message is", message)
+  // console.log("message is", message)
 })
 
 ipc.on('opensub', function (event, message) {
-    Swal.fire({
-        title: 'Select subtitles file',
-        html: "note: Only .srt and .vtt formats are supported",
-        input: 'file',
-        inputAttributes: {
-            'accept': '.vtt,.srt',
-            'aria-label': 'choose your subtitles file'
-        }
-    }).then((result) => {
-        if (result.value) {
-            loadSubtitles(result.value.path);
-            swal.fire("Please open the video in full screen mode")
-        }
-    })
-});
+  Swal.fire({
+    title: 'Select subtitles file',
+    html: 'note: Only .srt and .vtt formats are supported',
+    input: 'file',
+    inputAttributes: {
+      accept: '.vtt,.srt',
+      'aria-label': 'choose your subtitles file'
+    }
+  }).then((result) => {
+    if (result.value) {
+      loadSubtitles(result.value.path)
+      swal.fire('Please open the video in full screen mode')
+    }
+  })
+})
 ipc.on('lyrics', function (event, message) {
-    swal.fire({
-        text: 'please enter song name',
+  swal.fire({
+    text: 'please enter song name',
+    input: 'text',
+    inputPlaceholder: 'Ex: rolling in the deep',
+    showCancelButton: true,
+    inputValidator: (song) => {
+      if (!song) {
+        return 'You need to write something!'
+      }
+    }
+  }).then((song) => {
+    if (song.value) {
+      swal.fire({
+        text: 'please enter the artist name',
         input: 'text',
-        inputPlaceholder: 'Ex: rolling in the deep',
+        inputPlaceholder: 'Ex: adele',
         showCancelButton: true,
-        inputValidator: (song) => {
-            if (!song) {
-                return 'You need to write something!';
-            }
+        inputValidator: (artist) => {
+          if (!artist) {
+            return 'you need to write something!'
+          }
         }
-    }).then((song) => {
-        if (song.value) {
-            swal.fire({
-                text: 'please enter the artist name',
-                input: 'text',
-                inputPlaceholder: 'Ex: adele',
-                showCancelButton: true,
-                inputValidator: (artist) => {
-                    if (!artist) {
-                        return 'you need to write something!'
-                    }
-                }
-            }).then((artist) => {
-                $.get("https://www.azlyrics.com/lyrics/" + artist.value.replace(
-                        /\s/g,
-                        '') + "/" +
+      }).then((artist) => {
+        $.get('https://www.azlyrics.com/lyrics/' + artist.value.replace(
+          /\s/g,
+          '') + '/' +
                     song.value.replace(/\s/g,
-                        '') +
-                    ".html",
-                    function (responseText) {
+                      '') +
+                    '.html',
+        function (responseText) {
+          const newHTMLDocument = document.implementation.createHTMLDocument()
+          newHTMLDocument.open()
+          newHTMLDocument.write(responseText)
+          newHTMLDocument.close()
+          const elements = newHTMLDocument.getElementsByClassName('col-xs-12 col-lg-8 text-center')[0]
+          for (let i = 0; i < elements.childNodes.length; i++) {
+            if (elements.childNodes[i].tagName == 'DIV' && $(elements.childNodes[i]).hasClass('')) {
+              lyrics = true
+              lyricsText = '<div align="left">[Keyboard media controls]<br><kbd>Left</kbd> -> Move backward<br><kbd>Right</kbd> -> Move forward<br><kbd>Space</kbd> -> Pause/Play<br><kbd>Up</kbd> -> Volume up <br><kbd>Down</kbd> -> Volume down</div><br>' + "<div class='lyrics-display' style='height:69%;overflow-y:scroll;border:2px solid orange;'>" + elements.childNodes[i].innerHTML + '</div>'
 
-                        let newHTMLDocument = document.implementation.createHTMLDocument();
-                        newHTMLDocument.open();
-                        newHTMLDocument.write(responseText);
-                        newHTMLDocument.close();
-                        let elements = newHTMLDocument.getElementsByClassName("col-xs-12 col-lg-8 text-center")[0];
-                        for (let i = 0; i < elements.childNodes.length; i++) {
-                            if (elements.childNodes[i].tagName == "DIV" && $(elements.childNodes[i]).hasClass('')) {
-                                lyrics = true;
-                                lyricsText = '<div align="left">[Keyboard media controls]<br><kbd>Left</kbd> -> Move backward<br><kbd>Right</kbd> -> Move forward<br><kbd>Space</kbd> -> Pause/Play<br><kbd>Up</kbd> -> Volume up <br><kbd>Down</kbd> -> Volume down</div><br>' + "<div class='lyrics-display' style='height:69%;overflow-y:scroll;border:2px solid orange;'>" + elements.childNodes[i].innerHTML + "</div>"
-
-                                Swal.fire({
-                                    allowOutsideClick: false,
-                                    allowEnterKey: false,
-                                    html: '<div align="left">[Keyboard media controls]<br><kbd>Left</kbd> -> Move backward<br><kbd>Right</kbd> -> Move forward<br><kbd>Space</kbd> -> Pause/Play<br><kbd>Up</kbd> -> Volume up <br><kbd>Down</kbd> -> Volume down</div><br>' + "<div class='lyrics-display' style='height:69%;overflow-y:scroll;border:2px solid orange;'>" + elements.childNodes[i].innerHTML + "</div>"
-                                }).then((result) => {
-                                    if (result.value) {
-                                        lyrics = false;
-                                    }
-                                })
-                                document.querySelector('.lyrics-display').onmouseup = doSomethingWithSelectedTextLrx;
-                                document.querySelector('.lyrics-display').onkeyup = doSomethingWithSelectedTextLrx;
-                            }
-                        }
-                    }).fail(function () {
-                    swal.fire({
-                        text: "couldn't get the lyrics of the song '" +
+              Swal.fire({
+                allowOutsideClick: false,
+                allowEnterKey: false,
+                html: '<div align="left">[Keyboard media controls]<br><kbd>Left</kbd> -> Move backward<br><kbd>Right</kbd> -> Move forward<br><kbd>Space</kbd> -> Pause/Play<br><kbd>Up</kbd> -> Volume up <br><kbd>Down</kbd> -> Volume down</div><br>' + "<div class='lyrics-display' style='height:69%;overflow-y:scroll;border:2px solid orange;'>" + elements.childNodes[i].innerHTML + '</div>'
+              }).then((result) => {
+                if (result.value) {
+                  lyrics = false
+                }
+              })
+              document.querySelector('.lyrics-display').onmouseup = doSomethingWithSelectedTextLrx
+              document.querySelector('.lyrics-display').onkeyup = doSomethingWithSelectedTextLrx
+            }
+          }
+        }).fail(function () {
+          swal.fire({
+            text: "couldn't get the lyrics of the song '" +
                             song.value + "' for the artist '" +
                             artist
-                            .value + "'"
-                    })
-                });
-            })
-        }
-    })
-});
-ipc.on("download complete", (event, file) => {
-    loadSubtitles(file)
-});
+                              .value + "'"
+          })
+        })
+      })
+    }
+  })
+})
+ipc.on('download complete', (event, file) => {
+  loadSubtitles(file)
+})
 ipc.on('movies/series', function (event, message) {
-    OpenSubtitles.login()
-        .then(res => {
-            swal.fire({
-                showCancelButton: true,
-                confirmButtonText: 'Download',
-                html: `
+  OpenSubtitles.login()
+    .then(res => {
+      swal.fire({
+        showCancelButton: true,
+        confirmButtonText: 'Download',
+        html: `
                         <div class="input-group mb-3">
                         <div class="input-group-prepend">
                         <label class="input-group-text" for="inputGroupSelect01">Subtitles language</label>
@@ -229,344 +228,340 @@ ipc.on('movies/series', function (event, message) {
                         <input type="text" placeholder="ex: 5" class="form-control" id="episode" aria-describedby="basic-addon3">
                         </div>
                 `,
-                preConfirm: () => {
-                    const subLang = $('#lang').val();
-                    const title = $('#title').val();
-                    const season = $('#season').val();
-                    const episode = $('#episode').val();
-                    OpenSubtitles.search({
-                        sublanguageid: subLang,
-                        season: season,
-                        episode: episode,
-                        query: title,
-                        limit: '20',
-                        extensions: ['srt', 'vtt']
-                    }).then(subtitles => {
-                        var htmlcont = `<select class="custom-select input-sm" style="height:50%;width:100%;overflow-x: scroll;" id="subtitles" multiple>`;
-                        var subsArr = Object.keys(subtitles).map(k => subtitles[k])[0];
-                        if (subsArr) {
-                            for (let i = 0; i < subsArr.length; i++) {
-                                htmlcont += `<option value="` + subsArr[i].url + '\\|' + subsArr[i].format + '\\|' + subsArr[i].filename + `">` + subsArr[i].filename + `</option>`
-                            }
+        preConfirm: () => {
+          const subLang = $('#lang').val()
+          const title = $('#title').val()
+          const season = $('#season').val()
+          const episode = $('#episode').val()
+          OpenSubtitles.search({
+            sublanguageid: subLang,
+            season: season,
+            episode: episode,
+            query: title,
+            limit: '20',
+            extensions: ['srt', 'vtt']
+          }).then(subtitles => {
+            var htmlcont = '<select class="custom-select input-sm" style="height:50%;width:100%;overflow-x: scroll;" id="subtitles" multiple>'
+            var subsArr = Object.keys(subtitles).map(k => subtitles[k])[0]
+            if (subsArr) {
+              for (let i = 0; i < subsArr.length; i++) {
+                htmlcont += '<option value="' + subsArr[i].url + '\\|' + subsArr[i].format + '\\|' + subsArr[i].filename + '">' + subsArr[i].filename + '</option>'
+              }
 
-                            swal.fire({
-                                html: htmlcont,
-                                showCancelButton: true,
-                                preConfirm: function () {
-                                    const subUrl = $('#subtitles').val()[0].split('\\|')[0];
-                                    ipc.send("download", {
-                                        url: subUrl,
-                                        properties: {
-                                            filename: $('#subtitles').val()[0].split('\\|')[2]
-                                        }
-                                    });
-                                }
-                            }).then((result) => {
-                                if (result.value) {
-
-                                }
-                            })
-                        } else {
-                            swal.fire({
-                                html: `<div id="err">Couldn't find subtitles file for <br>title: ` + title + `<br> Season: ` + season + `<br> episode:` + episode + `<br>language:` + subLang + `</div>`
-                            })
-                        }
-                    })
+              swal.fire({
+                html: htmlcont,
+                showCancelButton: true,
+                preConfirm: function () {
+                  const subUrl = $('#subtitles').val()[0].split('\\|')[0]
+                  ipc.send('download', {
+                    url: subUrl,
+                    properties: {
+                      filename: $('#subtitles').val()[0].split('\\|')[2]
+                    }
+                  })
                 }
-            }).then((choice) => {})
-        })
-        .catch(err => {
-            swal.fire({
-                text: err
-            });
-        });
+              }).then((result) => {
+                if (result.value) {
+
+                }
+              })
+            } else {
+              swal.fire({
+                html: '<div id="err">Couldn\'t find subtitles file for <br>title: ' + title + '<br> Season: ' + season + '<br> episode:' + episode + '<br>language:' + subLang + '</div>'
+              })
+            }
+          })
+        }
+      }).then((choice) => {})
+    })
+    .catch(err => {
+      swal.fire({
+        text: err
+      })
+    })
 })
 ipc.on('about', function (event, message) {
-    Swal.fire({
-        title: '<strong>About</strong>',
-        imageUrl: 'https://i.imgur.com/kDqOC8w.png',
-        html: 'LLG media player is an open source media player built with \
+  Swal.fire({
+    title: '<strong>About</strong>',
+    imageUrl: 'https://i.imgur.com/kDqOC8w.png',
+    html: 'LLG media player is an open source media player built with \
         <a href="#" onclick="shell.openExternal(\'https://github.com/RSATom/WebChimera.js\')" >webchimera.js</a> which \
         provides javscript bindings for <a href="#" onclick="shell.openExternal(\'https://www.videolan.org/vlc/libvlc.html\')" >libvlc</a>\
          <br> it\'s main purpose is to gamify the language learning process through appending clickable subtitles to different types of media with an onclick instant translation \
           during the stream flow',
-        showCancelButton: true,
-        cancelButtonText: 'Cancel',
-        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Github',
-        confirmButtonAriaLabel: 'Thumbs up, great!',
-    }).then((result) => {
-        if (result.value) shell.openExternal('https://github.com/engMaher')
-    })
+    showCancelButton: true,
+    cancelButtonText: 'Cancel',
+    confirmButtonText: '<i class="fa fa-thumbs-up"></i> Github',
+    confirmButtonAriaLabel: 'Thumbs up, great!'
+  }).then((result) => {
+    if (result.value) shell.openExternal('https://github.com/engMaher')
+  })
 })
 var loadSubtitles = function (fpath) {
-    var xhr = new XMLHttpRequest();
-    var xhr2 = new XMLHttpRequest();
-    xhr.open('GET', "file:///" + fpath.replace(/\\/ig, '/').split(
-        /(?:\.([^.]+))?$/)[0] + ".vtt");
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && this.status == 200) {
-            doCaptions(xhr.responseText);
-        }
-    };
-    xhr.send();
-    xhr2.open('GET', "file:///" + fpath.replace(/\\/ig, '/').split(
-        /(?:\.([^.]+))?$/)[0] + ".srt");
-    xhr2.onreadystatechange = function () {
-        if (xhr2.readyState === 4 && xhr2.status == 200) {
-            var webvtt = srt2webvtt(xhr2.responseText);
-            doCaptions(webvtt);
-        } else if (xhr2.readyState != 4 && xhr2.status != 200) {
-            swal.fire(
-                "couldn't find subtitle file . PS: only .srt and .vtt formats are currently supported "
-            )
-        }
-    };
-    xhr2.send();
-}
-
-function doCaptions(caption) {
-    cues = [];
-    var parser = new WebVTT.Parser(window, WebVTT.StringDecoder());
-    parser.oncue = function (cue) {
-        cues.push(cue);
-    };
-    parser.onregion = function (region) {
-        regions.push(region);
+  var xhr = new XMLHttpRequest()
+  var xhr2 = new XMLHttpRequest()
+  xhr.open('GET', 'file:///' + fpath.replace(/\\/ig, '/').split(
+    /(?:\.([^.]+))?$/)[0] + '.vtt')
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && this.status == 200) {
+      doCaptions(xhr.responseText)
     }
-    parser.onparsingerror = function (error) {}
-    parser.parse(caption);
-    parser.flush();
-}
-
-function clearSelection() {
-    if (document.getElementById("player").contentWindow.getSelection) {
-        document.getElementById("player").contentWindow.getSelection().removeAllRanges();
-    } else if (document.getElementById("player").contentWindow.document.selection) {
-        document.getElementById("player").contentWindow.document.selection.empty();
+  }
+  xhr.send()
+  xhr2.open('GET', 'file:///' + fpath.replace(/\\/ig, '/').split(
+    /(?:\.([^.]+))?$/)[0] + '.srt')
+  xhr2.onreadystatechange = function () {
+    if (xhr2.readyState === 4 && xhr2.status == 200) {
+      var webvtt = srt2webvtt(xhr2.responseText)
+      doCaptions(webvtt)
+    } else if (xhr2.readyState != 4 && xhr2.status != 200) {
+      swal.fire(
+        "couldn't find subtitle file . PS: only .srt and .vtt formats are currently supported "
+      )
     }
+  }
+  xhr2.send()
 }
 
-function doSomethingWithSelectedTextLrx() {
-    var lang = mainVar.getGlobal('lang').lang;
-    if (!lang)
-        lang = 'ar';
-    var selectedText = getSelectedTextLrx();
-    if (selectedText) {
-        clearSelectionLrx();
-        translate(selectedText, {
-            to: lang
-        }).then(res => {
-            $(document).ready(function () {
-                if (lyrics) {
-                    Swal.fire({
-                        html: '<span>' +
+function doCaptions (caption) {
+  cues = []
+  var parser = new WebVTT.Parser(window, WebVTT.StringDecoder())
+  parser.oncue = function (cue) {
+    cues.push(cue)
+  }
+  parser.onregion = function (region) {
+    regions.push(region)
+  }
+  parser.onparsingerror = function (error) {}
+  parser.parse(caption)
+  parser.flush()
+}
+
+function clearSelection () {
+  if (document.getElementById('player').contentWindow.getSelection) {
+    document.getElementById('player').contentWindow.getSelection().removeAllRanges()
+  } else if (document.getElementById('player').contentWindow.document.selection) {
+    document.getElementById('player').contentWindow.document.selection.empty()
+  }
+}
+
+function doSomethingWithSelectedTextLrx () {
+  var lang = mainVar.getGlobal('lang').lang
+  if (!lang) { lang = 'ar' }
+  var selectedText = getSelectedTextLrx()
+  if (selectedText) {
+    clearSelectionLrx()
+    translate(selectedText, {
+      to: lang
+    }).then(res => {
+      $(document).ready(function () {
+        if (lyrics) {
+          Swal.fire({
+            html: '<span>' +
                             '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
                             selectedText + '</span><br>' +
-                            " in " + ((lang == 'ar') ? "Arabic" : (lang ==
-                                    'en') ?
-                                "English" :
-                                (lang == 'de') ? "German" : (lang == 'nl') ? "Dutch" : (lang == 'pl') ? "Polish" : (lang == 'fr') ? "French" : (lang == 'hi') ? "Hindi" : (lang == 'iw') ? "Hebrew" : (lang == 'it') ? "Italian" : (lang == 'ja') ? "Japanese" : (lang == 'ru') ? "Russian" : (lang == 'es') ? "Spanish" : (lang == 'tr') ? "Turkish" : "Invalid_Lang") +
-                            " is : <br>" +
+                            ' in ' + ((lang === 'ar') ? 'Arabic' : (lang ===
+                                    'en')
+              ? 'English'
+              : (lang === 'de') ? 'German' : (lang === 'nl') ? 'Dutch' : (lang === 'pl') ? 'Polish' : (lang === 'fr') ? 'French' : (lang === 'hi') ? 'Hindi' : (lang === 'iw') ? 'Hebrew' : (lang === 'it') ? 'Italian' : (lang === 'ja') ? 'Japanese' : (lang === 'ru') ? 'Russian' : (lang === 'es') ? 'Spanish' : (lang === 'tr') ? 'Turkish' : 'Invalid_Lang') +
+                            ' is : <br>' +
                             '</span>' +
                             '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
                             res.text + '</span>'
-                    }).then((result) => {
-                        Swal.fire({
-                            title: 'Do you want to save this word/phrase for future tests?',
-                            type: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Save'
-                        }).then((result) => {
-                            if (result.value) {
-                                var doc = {
-                                    source: "youtube",
-                                    expression: selectedText,
-                                    translation: res.text,
-                                    mediaPath: mediaPath,
-                                    currentPos: currentPos,
-                                    date: new Date()
-                                };
-                                db.insert(doc, function (err,
-                                    newDoc) {
-                                    if (err) throw err;
-                                    Swal.fire(
-                                        'Saved!',
-                                        'the word/expression has been saved',
-                                        'success'
-                                    ).then((result) => {
-                                        if (iframeVidElm) iframeVidElm.play();
-                                        if (result.value) {
-                                            Swal.fire({
-                                                allowOutsideClick: false,
-                                                allowEnterKey: false,
-                                                html: lyricsText
-                                            }).then((result) => {
-                                                if (result.value) {
-                                                    lyrics = false;
-                                                }
-                                            })
-                                            document.querySelector('.lyrics-display').onmouseup = doSomethingWithSelectedTextLrx;
-                                            document.querySelector('.lyrics-display').onkeyup = doSomethingWithSelectedTextLrx;
-                                        }
-                                    })
-                                });
-                            } else {
-                                Swal.fire({
-                                    allowOutsideClick: false,
-                                    allowEnterKey: false,
-                                    html: lyricsText
-                                }).then((result) => {
-                                    if (result.value) {
-                                        lyrics = false;
-                                    }
-                                })
-                                document.querySelector('.lyrics-display').onmouseup = doSomethingWithSelectedTextLrx;
-                                document.querySelector('.lyrics-display').onkeyup = doSomethingWithSelectedTextLrx;
-                                if (iframeVidElm) iframeVidElm.play();
-                            }
-                        })
-                    })
-                } else {
-                    Swal.fire({
-                        html: '<span>' +
-                            '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
-                            selectedText + '</span><br>' +
-                            " in " + ((lang == 'ar') ? "Arabic" : (lang ==
-                                    'en') ?
-                                "English" :
-                                (lang == 'de') ? "German" : (lang == 'nl') ? "Dutch" : (lang == 'pl') ? "Polish" : (lang == 'fr') ? "French" : (lang == 'hi') ? "Hindi" : (lang == 'iw') ? "Hebrew" : (lang == 'it') ? "Italian" : (lang == 'ja') ? "Japanese" : (lang == 'ru') ? "Russian" : (lang == 'es') ? "Spanish" : (lang == 'tr') ? "Turkish" : "Invalid_Lang") +
-                            " is : <br>" +
-                            '</span>' +
-                            '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
-                            res.text + '</span>'
-                    }).then((result) => {
-                        Swal.fire({
-                            title: 'Do you want to save this word/phrase for future tests?',
-                            type: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Save'
-                        }).then((result) => {
-                            if (result.value) {
-                                var doc = {
-                                    source: "youtube",
-                                    expression: selectedText,
-                                    translation: res.text,
-                                    mediaPath: mediaPath,
-                                    currentPos: currentPos,
-                                    date: new Date()
-                                };
-                                db.insert(doc, function (err,
-                                    newDoc) {
-                                    if (err) throw err;
-                                    Swal.fire(
-                                        'Saved!',
-                                        'the word/expression has been saved',
-                                        'success'
-                                    )
-                                });
-                                if (iframeVidElm) iframeVidElm.play();
-                            } else {
-                                if (iframeVidElm) iframeVidElm.play();
-                            }
-                        })
-                    })
+          }).then((result) => {
+            Swal.fire({
+              title: 'Do you want to save this word/phrase for future tests?',
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Save'
+            }).then((result) => {
+              if (result.value) {
+                var doc = {
+                  source: 'youtube',
+                  expression: selectedText,
+                  translation: res.text,
+                  mediaPath: mediaPath,
+                  currentPos: currentPos,
+                  date: new Date()
                 }
-            });
-        }).catch(err => {});
-    }
-}
-
-function getSelectedTextLrx() {
-    var text = "";
-    if (typeof window.getSelection != "undefined" && window.getSelection().anchorNode != null && window
-        .getSelection().toString().replace(/\s/g, '')) {
-        if (iframeVidElm) {
-            currentPos = iframeVidElm.currentTime
-            iframeVidElm.pause();
+                db.insert(doc, function (err,
+                  newDoc) {
+                  if (err) throw err
+                  Swal.fire(
+                    'Saved!',
+                    'the word/expression has been saved',
+                    'success'
+                  ).then((result) => {
+                    if (iframeVidElm) iframeVidElm.play()
+                    if (result.value) {
+                      Swal.fire({
+                        allowOutsideClick: false,
+                        allowEnterKey: false,
+                        html: lyricsText
+                      }).then((result) => {
+                        if (result.value) {
+                          lyrics = false
+                        }
+                      })
+                      document.querySelector('.lyrics-display').onmouseup = doSomethingWithSelectedTextLrx
+                      document.querySelector('.lyrics-display').onkeyup = doSomethingWithSelectedTextLrx
+                    }
+                  })
+                })
+              } else {
+                Swal.fire({
+                  allowOutsideClick: false,
+                  allowEnterKey: false,
+                  html: lyricsText
+                }).then((result) => {
+                  if (result.value) {
+                    lyrics = false
+                  }
+                })
+                document.querySelector('.lyrics-display').onmouseup = doSomethingWithSelectedTextLrx
+                document.querySelector('.lyrics-display').onkeyup = doSomethingWithSelectedTextLrx
+                if (iframeVidElm) iframeVidElm.play()
+              }
+            })
+          })
+        } else {
+          Swal.fire({
+            html: '<span>' +
+                            '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
+                            selectedText + '</span><br>' +
+                            ' in ' + ((lang == 'ar') ? 'Arabic' : (lang ==
+                                    'en')
+              ? 'English'
+              : (lang == 'de') ? 'German' : (lang == 'nl') ? 'Dutch' : (lang == 'pl') ? 'Polish' : (lang == 'fr') ? 'French' : (lang == 'hi') ? 'Hindi' : (lang == 'iw') ? 'Hebrew' : (lang == 'it') ? 'Italian' : (lang == 'ja') ? 'Japanese' : (lang == 'ru') ? 'Russian' : (lang == 'es') ? 'Spanish' : (lang == 'tr') ? 'Turkish' : 'Invalid_Lang') +
+                            ' is : <br>' +
+                            '</span>' +
+                            '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
+                            res.text + '</span>'
+          }).then((result) => {
+            Swal.fire({
+              title: 'Do you want to save this word/phrase for future tests?',
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Save'
+            }).then((result) => {
+              if (result.value) {
+                var doc = {
+                  source: 'youtube',
+                  expression: selectedText,
+                  translation: res.text,
+                  mediaPath: mediaPath,
+                  currentPos: currentPos,
+                  date: new Date()
+                }
+                db.insert(doc, function (err,
+                  newDoc) {
+                  if (err) throw err
+                  Swal.fire(
+                    'Saved!',
+                    'the word/expression has been saved',
+                    'success'
+                  )
+                })
+                if (iframeVidElm) iframeVidElm.play()
+              } else {
+                if (iframeVidElm) iframeVidElm.play()
+              }
+            })
+          })
         }
-        text = window.getSelection().toString();
-    }
-    if (typeof document.selection != "undefined" && document.selection.type == "Text") {
-        if (iframeVidElm) {
-            currentPos = iframeVidElm.currentTime
-            iframeVidElm.pause();
-        }
-        text = document.selection.createRange().text;
-    }
-    return text;
+      })
+    }).catch(err => {})
+  }
 }
 
-function clearSelectionLrx() {
-    if (window.getSelection) {
-        window.getSelection().removeAllRanges();
-    } else if (document.selection) {
-        document.selection.empty();
+function getSelectedTextLrx () {
+  var text = ''
+  if (typeof window.getSelection !== 'undefined' && window.getSelection().anchorNode != null && window
+    .getSelection().toString().replace(/\s/g, '')) {
+    if (iframeVidElm) {
+      currentPos = iframeVidElm.currentTime
+      iframeVidElm.pause()
     }
+    text = window.getSelection().toString()
+  }
+  if (typeof document.selection !== 'undefined' && document.selection.type == 'Text') {
+    if (iframeVidElm) {
+      currentPos = iframeVidElm.currentTime
+      iframeVidElm.pause()
+    }
+    text = document.selection.createRange().text
+  }
+  return text
 }
 
-function drop(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    var vidUrl = evt.dataTransfer.getData('text/html');
-    var rex = /src="?([^"\s]+)"?\s*/;
-    var url, res;
-    url = rex.exec(vidUrl);
+function clearSelectionLrx () {
+  if (window.getSelection) {
+    window.getSelection().removeAllRanges()
+  } else if (document.selection) {
+    document.selection.empty()
+  }
 }
-if (document.getElementById("player").contentWindow.document.getElementsByTagName('video')[0]) {
-    iframeVidElm = document.getElementById("player").contentWindow.document.getElementsByTagName('video')[0]
-    iframeVidElm.focus();
-}
-if (document.getElementById("player").contentWindow.document.getElementById("iframe-embed")) {
-    if (document.getElementById("player").contentWindow.document.getElementById("iframe-embed").contentWindow.document.getElementsByTagName('video')[0]) {
-        iframeVidElm = document.getElementById("player").contentWindow.document.getElementById("iframe-embed").contentWindow.document.getElementsByTagName('video')[0];
-        iframeVidElm.focus();
-    }
-}
-document.querySelector('.captions-display').onmouseup = doSomethingWithSelectedTextLrx;
-document.querySelector('.captions-display').onkeyup = doSomethingWithSelectedTextLrx;
 
-document.getElementById("player").contentWindow.document.ondragover = document.getElementById("player").contentWindow.document.ondrop = (ev) => {
-    ev.preventDefault()
+function drop (evt) {
+  evt.stopPropagation()
+  evt.preventDefault()
+  var vidUrl = evt.dataTransfer.getData('text/html')
+  var rex = /src="?([^"\s]+)"?\s*/
+  var url, res
+  url = rex.exec(vidUrl)
 }
-document.getElementById("player").contentWindow.document.ondrop = (ev) => {
-    doCaptions("");
-    var subPath = ev.dataTransfer.files[0].path.replace(/\\/ig, '/');
-    ev.preventDefault()
-    loadSubtitles(subPath);
+if (document.getElementById('player').contentWindow.document.getElementsByTagName('video')[0]) {
+  iframeVidElm = document.getElementById('player').contentWindow.document.getElementsByTagName('video')[0]
+  iframeVidElm.focus()
+}
+if (document.getElementById('player').contentWindow.document.getElementById('iframe-embed')) {
+  if (document.getElementById('player').contentWindow.document.getElementById('iframe-embed').contentWindow.document.getElementsByTagName('video')[0]) {
+    iframeVidElm = document.getElementById('player').contentWindow.document.getElementById('iframe-embed').contentWindow.document.getElementsByTagName('video')[0]
+    iframeVidElm.focus()
+  }
+}
+document.querySelector('.captions-display').onmouseup = doSomethingWithSelectedTextLrx
+document.querySelector('.captions-display').onkeyup = doSomethingWithSelectedTextLrx
+
+document.getElementById('player').contentWindow.document.ondragover = document.getElementById('player').contentWindow.document.ondrop = (ev) => {
+  ev.preventDefault()
+}
+document.getElementById('player').contentWindow.document.ondrop = (ev) => {
+  doCaptions('')
+  var subPath = ev.dataTransfer.files[0].path.replace(/\\/ig, '/')
+  ev.preventDefault()
+  loadSubtitles(subPath)
 }
 if (iframeVidElm) {
-    var video = iframeVidElm
-    video.addEventListener('timeupdate', function () {
-        var ct = video.currentTime;
-        var activeCues = cues.filter(function (cue) {
-            return cue.startTime <= ct && cue.endTime >= ct;
-        });
-        WebVTT.processCues(window, activeCues, captionsDisplay);
-    });
-    $(document).on('keyup', 'body', function (evt) {
-        if (evt.which == 32 && iframeVidElm.paused) {
-            iframeVidElm.play();
-        }
-        else if (evt.which == 32 && !iframeVidElm.paused) {
-            iframeVidElm.pause();
-        }
-        if (evt.which == 37) {
-            iframeVidElm.currentTime = iframeVidElm.currentTime - 5;
-        }
-        if (evt.which == 39) {
-            iframeVidElm.currentTime = iframeVidElm.currentTime + 5;
-        }
-        if (evt.which == 38) {
-            if (iframeVidElm.volume < .9)
-                iframeVidElm.volume += .1;
-        }
-        if (evt.which == 40) {
-            if (iframeVidElm.volume > .1)
-                iframeVidElm.volume -= .1;
-        }
-    }).keyup(function (evt) {});
+  var video = iframeVidElm
+  video.addEventListener('timeupdate', function () {
+    var ct = video.currentTime
+    var activeCues = cues.filter(function (cue) {
+      return cue.startTime <= ct && cue.endTime >= ct
+    })
+    WebVTT.processCues(window, activeCues, captionsDisplay)
+  })
+  $(document).on('keyup', 'body', function (evt) {
+    if (evt.which == 32 && iframeVidElm.paused) {
+      iframeVidElm.play()
+    } else if (evt.which == 32 && !iframeVidElm.paused) {
+      iframeVidElm.pause()
+    }
+    if (evt.which == 37) {
+      iframeVidElm.currentTime = iframeVidElm.currentTime - 5
+    }
+    if (evt.which == 39) {
+      iframeVidElm.currentTime = iframeVidElm.currentTime + 5
+    }
+    if (evt.which == 38) {
+      if (iframeVidElm.volume < 0.9) { iframeVidElm.volume += 0.1 }
+    }
+    if (evt.which == 40) {
+      if (iframeVidElm.volume > 0.1) { iframeVidElm.volume -= 0.1 }
+    }
+  }).keyup(function (evt) {})
 }

@@ -14,124 +14,123 @@
  * limitations under the License.
  */
 
-(function(root) {
-
+(function (root) {
   var scrollSetting = {
-    "": true,
-    "up": true
-  };
-
-  function findScrollSetting(value) {
-    if (typeof value !== "string") {
-      return false;
-    }
-    var scroll = scrollSetting[value.toLowerCase()];
-    return scroll ? value.toLowerCase() : false;
+    '': true,
+    up: true
   }
 
-  function isValidPercentValue(value) {
-    return typeof value === "number" && (value >= 0 && value <= 100);
+  function findScrollSetting (value) {
+    if (typeof value !== 'string') {
+      return false
+    }
+    var scroll = scrollSetting[value.toLowerCase()]
+    return scroll ? value.toLowerCase() : false
+  }
+
+  function isValidPercentValue (value) {
+    return typeof value === 'number' && (value >= 0 && value <= 100)
   }
 
   // VTTRegion shim http://dev.w3.org/html5/webvtt/#vttregion-interface
-  function VTTRegion() {
-    var _width = 100;
-    var _lines = 3;
-    var _regionAnchorX = 0;
-    var _regionAnchorY = 100;
-    var _viewportAnchorX = 0;
-    var _viewportAnchorY = 100;
-    var _scroll = "";
+  function VTTRegion () {
+    var _width = 100
+    var _lines = 3
+    var _regionAnchorX = 0
+    var _regionAnchorY = 100
+    var _viewportAnchorX = 0
+    var _viewportAnchorY = 100
+    var _scroll = ''
 
     Object.defineProperties(this, {
-      "width": {
+      width: {
         enumerable: true,
-        get: function() {
-          return _width;
+        get: function () {
+          return _width
         },
-        set: function(value) {
+        set: function (value) {
           if (!isValidPercentValue(value)) {
-            throw new Error("Width must be between 0 and 100.");
+            throw new Error('Width must be between 0 and 100.')
           }
-          _width = value;
+          _width = value
         }
       },
-      "lines": {
+      lines: {
         enumerable: true,
-        get: function() {
-          return _lines;
+        get: function () {
+          return _lines
         },
-        set: function(value) {
-          if (typeof value !== "number") {
-            throw new TypeError("Lines must be set to a number.");
+        set: function (value) {
+          if (typeof value !== 'number') {
+            throw new TypeError('Lines must be set to a number.')
           }
-          _lines = value;
+          _lines = value
         }
       },
-      "regionAnchorY": {
+      regionAnchorY: {
         enumerable: true,
-        get: function() {
-          return _regionAnchorY;
+        get: function () {
+          return _regionAnchorY
         },
-        set: function(value) {
+        set: function (value) {
           if (!isValidPercentValue(value)) {
-            throw new Error("RegionAnchorX must be between 0 and 100.");
+            throw new Error('RegionAnchorX must be between 0 and 100.')
           }
-          _regionAnchorY = value;
+          _regionAnchorY = value
         }
       },
-      "regionAnchorX": {
+      regionAnchorX: {
         enumerable: true,
-        get: function() {
-          return _regionAnchorX;
+        get: function () {
+          return _regionAnchorX
         },
-        set: function(value) {
-          if(!isValidPercentValue(value)) {
-            throw new Error("RegionAnchorY must be between 0 and 100.");
-          }
-          _regionAnchorX = value;
-        }
-      },
-      "viewportAnchorY": {
-        enumerable: true,
-        get: function() {
-          return _viewportAnchorY;
-        },
-        set: function(value) {
+        set: function (value) {
           if (!isValidPercentValue(value)) {
-            throw new Error("ViewportAnchorY must be between 0 and 100.");
+            throw new Error('RegionAnchorY must be between 0 and 100.')
           }
-          _viewportAnchorY = value;
+          _regionAnchorX = value
         }
       },
-      "viewportAnchorX": {
+      viewportAnchorY: {
         enumerable: true,
-        get: function() {
-          return _viewportAnchorX;
+        get: function () {
+          return _viewportAnchorY
         },
-        set: function(value) {
+        set: function (value) {
           if (!isValidPercentValue(value)) {
-            throw new Error("ViewportAnchorX must be between 0 and 100.");
+            throw new Error('ViewportAnchorY must be between 0 and 100.')
           }
-          _viewportAnchorX = value;
+          _viewportAnchorY = value
         }
       },
-      "scroll": {
+      viewportAnchorX: {
         enumerable: true,
-        get: function() {
-          return _scroll;
+        get: function () {
+          return _viewportAnchorX
         },
-        set: function(value) {
-          var setting = findScrollSetting(value);
+        set: function (value) {
+          if (!isValidPercentValue(value)) {
+            throw new Error('ViewportAnchorX must be between 0 and 100.')
+          }
+          _viewportAnchorX = value
+        }
+      },
+      scroll: {
+        enumerable: true,
+        get: function () {
+          return _scroll
+        },
+        set: function (value) {
+          var setting = findScrollSetting(value)
           // Have to check for false as an empty string is a legal value.
           if (setting === false) {
-            throw new SyntaxError("An invalid or illegal string was specified.");
+            throw new SyntaxError('An invalid or illegal string was specified.')
           }
-          _scroll = setting;
+          _scroll = setting
         }
       }
-    });
+    })
   }
 
-  root.VTTRegion = root.VTTRegion || VTTRegion;
-}(this));
+  root.VTTRegion = root.VTTRegion || VTTRegion
+}(this))

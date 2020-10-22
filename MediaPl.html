@@ -21,9 +21,24 @@
 </body>
 
 </html>
-<script>
+<script defer>
     var mainVar = require('electron').remote;
-    mainVar.getGlobal('visitor').pageview("/MediaPl").send()
+    mainVar.getGlobal('visitor').pageview("/MediaPl").send();
+    window.onload= () => {
+    //write your code here
+    var divChild = document.createElement('div');
+    var txt = '<label class="switch"><input id="autoreplay" type="checkbox"><span class="slider round"></span><div class="replay">AutoReplay</div></label>';
+    divChild.innerHTML = txt.trim(); 
+    var parent = document.querySelectorAll(".wcp-time") ; 
+    parent[0].insertAdjacentElement('afterend',divChild.firstChild);
+
+    var divChild2 = document.createElement('div');
+    var txt = '<label><button id="clearplaylist">Clear Playlist</button></label>';
+    divChild2.innerHTML = txt.trim(); 
+    var parent2 = document.querySelectorAll(".wcp-playlist") ; 
+    parent2[0].insertAdjacentElement('beforeend',divChild2.firstChild);
+
+}
 </script>
 <script src="./scripts/vtt.js"> </script>
 <script src="./scripts/swal.js"> </script>
