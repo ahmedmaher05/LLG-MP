@@ -2,19 +2,18 @@ var wjs = require('wcjs-player');
 delete wjs.hideUI;
 var mainVar = require('electron').remote;
 var ipc = require('electron').ipcRenderer;
+var originalText = '';
+var translatedText = '';
+var originalLang = '';
+var translatedLang = '';
+
 const OS = require('opensubtitles-api');
 var gtts = require('node-gtts')('en');
 gtts.createServer(8668);
-
-var arabString = 'ich habe keine glecht';
-
-var a = new Audio(
-    'http://localhost:8668/?text=' +
-        arabString.replace(/ /g, '%20') +
-        '&lang=de'
-);
-a.play();
-
+const LanguageDetect = require('languagedetect');
+const lngDetector = new LanguageDetect();
+lngDetector.setLanguageType('iso2');
+var appVersion = require('electron').remote.app.getVersion();
 const OpenSubtitles = new OS({
     useragent: 'LLG-MP v0.1',
     ssl: true,
@@ -24,6 +23,7 @@ var { translate } = require('google-translate-api-browser');
 var $ = require('jquery');
 var Datastore = require('nedb');
 const wcjsPrebuilt = require('wcjs-prebuilt');
+const Text2Speech = require('node-gtts');
 var db = new Datastore({
     filename: mainVar.getGlobal('dirName').dirname,
     autoload: true,
@@ -200,7 +200,6 @@ ipc.on('movies/series', function (event, message) {
                     const title = $('#title').val();
                     const season = $('#season').val();
                     const episode = $('#episode').val();
-                    console.log(mediaPath);
                     const subLangHash = $('#langHash').val();
                     if (subLangHash) {
                         OpenSubtitles.search({
@@ -340,15 +339,21 @@ ipc.on('movies/series', function (event, message) {
 });
 ipc.on('about', function (event, message) {
     Swal.fire({
-        title: '<strong>About</strong>',
+        title: 'LLG-MP v' + appVersion,
         imageUrl: 'https://i.imgur.com/kDqOC8w.png',
         html:
             'LLG media player is an open source media player built with \
         <a href="#" onclick="shell.openExternal(\'https://github.com/RSATom/WebChimera.js\')" >webchimera.js</a> which \
         provides javscript bindings for <a href="#" onclick="shell.openExternal(\'https://www.videolan.org/vlc/libvlc.html\')" >libvlc</a>\
          <br> it\'s main purpose is to gamify the language learning process through appending clickable subtitles to different types of media with an onclick instant translation \
-          during the stream flow',
-        showCancelButton: true,
+          during the stream flow <div> <br> \
+          <button class="btn btn-primary" id="like_github"><i class="fas fa-thumbs-up"></i> Github</button>\
+          <button class="btn btn-danger" id="like_youtube"><i class="fas fa-thumbs-up"></i> Youtube</button>\
+          <button class="btn btn-success" id="chat_gitter"><i class="far fa-comments"></i> Gitter</button><div style="height:10px;font-size:1px;">&nbsp;</div>\
+          <button class="btn btn-secondary" id="cancel_swal">Cancel</button>\
+        </div>`',
+        showConfirmButton: false,
+        showCloseButton: true,
         cancelButtonText: 'Cancel',
         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Github',
         confirmButtonAriaLabel: 'Thumbs up, great!',
@@ -359,7 +364,7 @@ ipc.on('about', function (event, message) {
 });
 
 ipc.on('newReleases', function (event, message) {
-    shell.openExternal('https://github.com/engMaher');
+    shell.openExternal('https://github.com/engMaher/LLG-MP/releases');
 });
 document.ondragover = document.ondrop = (ev) => {
     ev.preventDefault();
@@ -589,21 +594,24 @@ function doSomethingWithSelectedText() {
     if (!lang) {
         lang = 'AR';
     }
-    var selectedText = getSelectedText();
-    if (selectedText) {
+    originalText = getSelectedText();
+    if (originalText) {
         clearSelection();
-        translate(selectedText, {
+        translate(originalText, {
             to: lang,
         })
             .then((res) => {
                 $(document).ready(function () {
                     if (lyrics) {
+                        translatedLang = lang;
+                        translatedText = res.text;
+                        console.log('test1' + translatedText);
                         Swal.fire({
                             html:
                                 '<span>' +
                                 '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
-                                selectedText +
-                                '</span><button type="button" id="play-original"> </button> <br>' +
+                                originalText +
+                                '</span><button type="button" id="play-sound-original"> </button> <br>' +
                                 ' in ' +
                                 (lang == 'AF'
                                     ? 'Afrikaans'
@@ -756,7 +764,7 @@ function doSomethingWithSelectedText() {
                                 '</span>' +
                                 '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
                                 res.text +
-                                '</span><button type="button" id="play-translated"> </button>',
+                                '</span><button type="button" id="play-sound-translated"> </button>',
                         }).then((result) => {
                             Swal.fire({
                                 title:
@@ -770,7 +778,7 @@ function doSomethingWithSelectedText() {
                                 if (result.value) {
                                     var doc = {
                                         source: 'local',
-                                        expression: selectedText,
+                                        expression: originalText,
                                         translation: res.text,
                                         mediaPath: mediaPath,
                                         currentPos: currentPos,
@@ -824,12 +832,14 @@ function doSomethingWithSelectedText() {
                             });
                         });
                     } else {
+                        translatedText = res.text;
+                        translatedLang = lang;
                         Swal.fire({
                             html:
                                 '<span>' +
                                 '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
-                                selectedText +
-                                '</span><button type="button" id="play-original"> </button> <br>' +
+                                originalText +
+                                '</span><button type="button" id="play-sound-original"> </button> <br>' +
                                 ' in ' +
                                 (lang == 'AF'
                                     ? 'Afrikaans'
@@ -982,7 +992,7 @@ function doSomethingWithSelectedText() {
                                 '</span>' +
                                 '<span style="color:red;font-size:xx-large;font-weight: bold;">' +
                                 res.text +
-                                '</span><button type="button" id="play-translated"> </button>',
+                                '</span><button type="button" id="play-sound-translated"> </button>',
                         }).then((result) => {
                             Swal.fire({
                                 title:
@@ -996,7 +1006,7 @@ function doSomethingWithSelectedText() {
                                 if (result.value) {
                                     var doc = {
                                         source: 'local',
-                                        expression: selectedText,
+                                        expression: originalText,
                                         translation: res.text,
                                         mediaPath: mediaPath,
                                         currentPos: currentPos,
@@ -1018,7 +1028,6 @@ function doSomethingWithSelectedText() {
                         });
                     }
                 });
-                // console.log(res.from.language.iso);
             })
             .catch((err) => {
                 console.error(err);
@@ -1280,8 +1289,51 @@ $(document).on('change', '#autoreplay', function () {
 });
 
 $(document).on('click', '#clearplaylist', function () {
-    console.log(mediaPath);
     player.clearPlaylist();
+});
+
+$(document).on('click', '#cancel_swal', function () {
+    Swal.close();
+});
+
+$(document).on('click', '#like_github', function () {
+    shell.openExternal('https://github.com/engMaher/LLG-MP');
+});
+
+$(document).on('click', '#like_youtube', function () {
+    shell.openExternal(
+        'https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1'
+    );
+});
+$(document).on('click', '#chat_gitter', function () {
+    shell.openExternal('https://gitter.im/LLG-MP/community?utm_source=badge');
+});
+
+Text2Speech.LANGUAGES = $(document).on(
+    'click',
+    '#play-sound-original',
+    function () {
+        var a = new Audio(
+            'http://localhost:8668/?text=' +
+                encodeURIComponent(originalText) +
+                '&lang=' +
+                originalLang.toLowerCase()
+        );
+        originalLang = lngDetector.detect(originalText, 1)[0][0];
+
+        a.play();
+    }
+);
+
+$(document).on('click', '#play-sound-translated', function () {
+    var a = new Audio(
+        'http://localhost:8668/?text=' +
+            encodeURIComponent(translatedText) +
+            '&lang=' +
+            translatedLang.toLowerCase()
+    );
+
+    a.play();
 });
 
 player.onState(function (state) {
@@ -1291,6 +1343,32 @@ player.onState(function (state) {
 });
 
 $(player).unbind('mousemove');
+
+document.addEventListener('keydown', function (e) {
+    var barPixels = parseFloat($('.wcp-vol-bar-full').css('width'));
+
+    switch (e.keyCode) {
+        case 32:
+            player.togglePause();
+            break;
+        case 39:
+            player.time(player.time() + 5000);
+            break;
+        case 38:
+            if (player.vlc.volume < 200) {
+                player.volume(player.volume() + 25);
+            }
+            break;
+        case 37:
+            player.time(player.time() - 5000);
+            break;
+        case 40:
+            if (player.vlc.volume > 0 && barPixels > 0) {
+                player.volume(player.volume() - 25);
+            }
+            break;
+    }
+});
 
 captionsDisplay.onmouseup = doSomethingWithSelectedText;
 captionsDisplay.onkeyup = doSomethingWithSelectedText;

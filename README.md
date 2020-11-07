@@ -5,8 +5,7 @@
 
 
 ![alt tag](https://i.imgur.com/kDqOC8w.png)
-<br>
-<br>
+
 Language Learning Gamification Media Player 
 
 * Version [0.1.3] --> [(public releases).(beta versions).(bugfixes patches)]

@@ -199,7 +199,16 @@ kbd {
   background: #FFA500 !important;
 }
 
-#play-original {
-    font-family: fontAwesome;
-    content: "\f00d\00a0";
+#play-sound-original {
+    background-image: url(../build/speaker-24.ico);
+    background-repeat: no-repeat;
+    width: 30px;
+    height: 30px;
+ }   
+
+ #play-sound-translated {
+    background-image: url(../build/speaker-24.ico);
+    background-repeat: no-repeat;
+    width: 30px;
+    height: 30px;
  }   

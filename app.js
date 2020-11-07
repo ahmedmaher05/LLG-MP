@@ -765,7 +765,9 @@ var mediaPlayerMenu = [
             {
                 label: 'Check for new releases',
                 click() {
-                    electronShell.openExternal('https://github.com/engMaher');
+                    electronShell.openExternal(
+                        'https://github.com/engMaher/LLG-MP/releases'
+                    );
                 },
             },
         ],
@@ -1454,7 +1456,9 @@ var ExtWebsiteMenu_youtube = [
             {
                 label: 'Check for new releases',
                 click() {
-                    electronShell.openExternal('https://github.com/engMaher');
+                    electronShell.openExternal(
+                        'https://github.com/engMaher/LLG-MP/releases'
+                    );
                 },
             },
         ],
@@ -2143,7 +2147,9 @@ var ExtWebsiteMenu_yesMovies = [
             {
                 label: 'Check for new releases',
                 click() {
-                    electronShell.openExternal('https://github.com/engMaher');
+                    electronShell.openExternal(
+                        'https://github.com/engMaher/LLG-MP/releases'
+                    );
                 },
             },
         ],
@@ -2214,7 +2220,9 @@ var savedExpMenu = [
             {
                 label: 'Check for new releases',
                 click() {
-                    electronShell.openExternal('https://github.com/engMaher');
+                    electronShell.openExternal(
+                        'https://github.com/engMaher/LLG-MP/releases'
+                    );
                 },
             },
         ],
