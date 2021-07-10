@@ -49,7 +49,7 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 * Browse PC for subtitles file and append it to local media / youtube video / yesmovies video
 * Refer to new words/expressions in savedWords view
 * Download subtitles files (by either media hash or specifying movie/series name) and append them to either local media file or youtube/yesmovies videos .
-=======
+
 ## LLG Media Player features 
 * Supports almost all media formats much like VLC media player as both are built on the same media engine (libvlc)  
 * Supports popular subtitles files such as .vtt & .srt
