@@ -1,11 +1,19 @@
 # LLG-MP 0.2.4
+=======
+# LLG Media Player 0.1.3
+>>>>>>> 85e143f24024571f7984191d3785c60ae142eaf2
 
  [![GitHub version](https://img.shields.io/github/v/tag/engMaher/LLG-MP)](https://badge.fury.io/gh/engMaher%2FLLG-MP) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0) [![Miro](https://img.shields.io/badge/wireframe-miro-yellow.svg)](https://miro.com/app/board/o9J_knGF4P8=/)  [![Github All Releases](https://img.shields.io/github/downloads/engMaher/LLG-MP/total)]()  [![Gitter](https://img.shields.io/gitter/room/engMaher/LLg-MP)](https://gitter.im/LLG-MP/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![GitHub contributors](https://img.shields.io/github/contributors-anon/engMaher/LLG-MP)]() [![GitHub contributors](https://img.shields.io/github/issues-raw/engMaher/LLG-MP)]() [![GitHub contributors](https://img.shields.io/github/issues-closed-raw/engMaher/LLG-MP)]() 
 
 
  <!-- [![Build Status](https://travis-ci.org/emk/subtitles-rs.svg?branch=master)](https://travis-ci.org/emk/subtitles-rs) [![Build status](https://ci.appveyor.com/api/projects/status/3hn8cwckcdhpcasm/branch/master?svg=true)](https://ci.appveyor.comproject/emk/subtitles-rs/branch/master) -->
 
+<<<<<<< HEAD
 ![alt tag](https://i.imgur.com/kDqOC8w.png)
+=======
+______________________________________________________________________________________________________________________________
+## what is LLG Media Player ? 
+>>>>>>> 85e143f24024571f7984191d3785c60ae142eaf2
 
 Language Learning Gamification Media Player
 * This software is under  AGPLv3 license
@@ -33,6 +41,7 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
     * Linux support
 <br>
 
+<<<<<<< HEAD
 * As a language learning gamification framework:
   * Transforms subtitles/lyrics text into highlightable words and phrases, once highlighted , their google text translation appears with audio sound of both original & translated text.
   * Ability to save new words/phrases along with their translation, local media path/remote media url and time of occurence in the media object & refer to the new words/phrases occurence in the media afterwards.
@@ -47,8 +56,27 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 * Browse PC for subtitles file and append it to local media / youtube video / yesmovies video
 * Refer to new words/expressions in savedWords view
 * Download subtitles files (by either media hash or specifying movie/series name) and append them to either local media file or youtube/yesmovies videos .
+=======
+## LLG Media Player features 
+* Supports almost all media formats much like VLC media player as both are built on the same media engine (libvlc)  
+* Supports popular subtitles files such as .vtt & .srt
+* Transforms subtitles/lyrics words and phrases into clickable strings , once clicked their google translation appears 
+* Automatic detection for subtitles/lyrics language with support of translation to 10+ different languages 
+* Integrates with <a href="https://www.youtube.com"> youtube </a> and <a href="https://yesmovies.to/"> yesmovies </a> 
+* Ability to fetch songs lyrics by song name & singer name then show it on either local media or remote media from youtube/yesmovies (clickable & translatable)
+* Ability to import subtitles file and append it to either local media or remote media from youtube/yesmovies videos (clickable & translatable)
+* Ability to save new words/phrases along with their translation , local media path/remote media url and time of occurence in the media file
 
-## How to use LLG-MP ? 
+## what can i do with LLG Media Player ?
+* You can use it as a regular media player much like vlc 
+* Browse pc for a subtitles file to be appended to youtube / yesmovies videos 
+* Search and fetch lyrics while playing youtube songs with controls over the video through keyboard buttons 
+* Browse PC for subtitles file and append it to local media / youtube video / yesmovies video 
+* Refer to new words/expressions in savedWords view 
+* Download subtitles files (by either media hash or specifying movie/series name) and append them to either local media file or youtube/yesmovies videos . 
+>>>>>>> 85e143f24024571f7984191d3785c60ae142eaf2
+
+## How to use LLG Media Player ? 
 * As a regular user : download and install the latest release from this <a href="https://github.com/engMaher/LLG-MP/releases">link</a> which complies with your operation system type/architecture [currently only windows 64-bit is supported] 
 
 * As a contributer :
@@ -75,7 +103,12 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 ## Pictures from the media player 
 ![image not found](https://i.imgur.com/lbv4xl6.jpg)
 
+## Users anonymous heat map generated via google analytics 
+![image not found](https://i.imgur.com/QXpaCzQ.png)
 
+
+
+<<<<<<< HEAD
 ## TODO list(features)
 - [x] Normal media player (much like VLC)
 - [x] Clickable/translatable subtitles & lyrics
@@ -98,12 +131,36 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 - [ ] Adding Books reader capability
 - [ ] Chrome extension for using LLG-MP with different media sources online
 - [ ] Making the media player cross platform and signing it in both appstore and windows store
-## Contributing
+=======
+## TODO list(features) 
+- [x] Customization of Mozilla's implementation of WEBVTT standard library for making subtitles clickable
+- [x] Interception/customization of sent http headers to overcome same origin regulation from youtube 
+- [x] Dom tree traversal for detection of yesmovies players nested iframes 
+- [x] Drag&drop media and subtitle files
+- [x] Youtube/yesmovies integration 
+- [x] Using <a href="https://github.com/louischatriot/nedb">NEDB</a> for new words/expressions storage
+- [x] Integration with <a href="https://www.azlyrics.com/">azlyrics</a> for fetching songs lyrics by song & singer names
+- [x] Implementing a simple route traffic detector feedback using google analytics to user behavior anonimously for future modifications
+- [x] Opensubtitles integration 
+- [x] opening media at saved words occurrence 
+- [ ] Implementation of user authentication system & synchronization between different instances of LLG Media Player for group learning remotely  
+- [ ] Adding a torrent client 
+- [ ] Making the media player cross platform and signing it in both appstore and windows store 
 
-Please read [CONTRIBUTING.md](https://gist.github.com/engMaher/6a6080973f2c7be7285aeec17bce4c56) for details on our code of conduct, and the process for submitting pull requests to us.
+>>>>>>> 85e143f24024571f7984191d3785c60ae142eaf2
+## Contributing
+- For developers : you can send pull requests with TODO features implementation and fix issues opened by users
+- For users : you can test the executable and file issues and request features 
+
+For more information please read [CONTRIBUTING.md](https://gist.github.com/engMaher/6a6080973f2c7be7285aeec17bce4c56) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Acknowledgments
 
+<<<<<<< HEAD
 - The open source community for sharing knowledge
 - Opensubtitles <a href="http://trac.opensubtitles.org/projects/opensubtitles/wiki/DevReadFirst"> support team </a> for granting LLG-MP an API agent for free
+=======
+- The open source community for sharing knowledge 
+- Opensubtitles <a href="http://trac.opensubtitles.org/projects/opensubtitles/wiki/DevReadFirst"> support team </a> for granting LLG Media Player an API agent for free
+>>>>>>> 85e143f24024571f7984191d3785c60ae142eaf2
 - <a href="https://electronjs.org/community"> Electron </a> and <a href="https://github.com/RSATom/WebChimera.js">Webchimera.js</a> communities for the support
