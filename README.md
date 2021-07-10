@@ -74,19 +74,21 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 * As a contributer :
    * Windows
 
-        ``` git clone https://github.com/engMaher/LLG-MP.git ```
-        ```npm install```
-        ```npm run postinstall-windows```
-        ```npm run dev-windows```
+        ``` git clone https://github.com/engMaher/LLG-MP.git ```<br>
+        ```npm install```<br>
+        ```npm run postinstall-windows```<br>
+        ```npm run dev-windows```<br>
 
 
     <br>
+    <br>
 
-    * Linux:
-    ``` git clone https://github.com/engMaher/LLG-MP.git ```
-    ```npm install```
-    ```npm run postinstall-linux```
+    * Linux:<br>
+    ``` git clone https://github.com/engMaher/LLG-MP.git ```<br>
+    ```npm install```<br>
+    ```npm run postinstall-linux```<br>
     ```npm run dev-linux ```
+    <br><br>
 
 ## [Demo youtube playlist demonstrating how to use LLG media player](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1)
 
