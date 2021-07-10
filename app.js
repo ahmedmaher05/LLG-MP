@@ -1,5 +1,8 @@
-const { autoUpdater } = require('electron-updater');
+// const { autoUpdater } = require('electron-updater');
 var path = require('path');
+const { session } = require('electron');
+// Query all cookies associated with a specific url.
+
 const { download } = require('electron-dl');
 if (process.platform == 'win32' && process.env.ELECTRON_ENV != 'development') {
     process.env.VLC_PLUGIN_PATH = path.join(
@@ -17,7 +20,11 @@ if (
         './node_modules/wcjs-prebuilt/bin/plugins'
     );
 }
-
+if (process.platform == 'win32')
+    process.env['VLC_PLUGIN_PATH'] = require('path').join(
+        __dirname,
+        'node_modules/webchimera.js/plugins'
+    );
 if (process.argv.length >= 2) {
     global.filePath = process.argv[1];
 }
@@ -109,12 +116,13 @@ var mediaPlayerMenu = [
                             {
                                 label: 'Youtube',
                                 click() {
+                                    mainWindow.setMenu(menuExtYoutube);
+                                    console.log('entered');
                                     mainWindow.loadURL(
                                         'file://' +
                                             __dirname +
                                             '/embeddedYoutube.html'
                                     );
-                                    mainWindow.setMenu(menuExtYoutube);
                                 },
                             },
                             {
@@ -2236,13 +2244,22 @@ const menuExtYesmovies = Menu.buildFromTemplate(ExtWebsiteMenu_yesMovies);
 // This method will be called when Electron has done everything
 // initialization and ready for creating browser windows.
 // app.commandLine.appendSwitch('allow-file-access-from-files');
+
 app.on('ready', function () {
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        webPreferences: {
+            nodeIntegration: true,
+            enableRemoteModule: true,
+            worldSafeExecuteJavaScript: true,
+            nodeIntegrationInWorker: true,
+            width: 800,
+            height: 600,
+            contextIsolation: false,
+        },
     });
     mainWindow.loadURL('file://' + __dirname + '/MediaPl.html');
+
     mainWindow.webContents.on(
         'new-window',
         (event, url, frameName, disposition, options, additionalFeatures) => {
@@ -2256,11 +2273,15 @@ app.on('ready', function () {
             });
         }
     );
+    session.defaultSession.cookies
+        .get({ url: 'https://www.youtube.com' })
+        .then((cookies) => {})
+        .catch((error) => {
+            console.log(error);
+        });
     mainWindow.setMenu(menuMP);
     // if (process.platform == "win32" && process.mainModule.filename.indexOf('app.asar') === -1)
-    mainWindow.openDevTools({
-        detach: true,
-    });
+    //mainWindow.openDevTools({ mode: 'detach' });
     ipc.on('download', (event, info) => {
         download(mainWindow, info.url, info.properties)
             .then(function (dl) {})
@@ -2278,7 +2299,10 @@ app.on('ready', function () {
     ipc.on('newWindowOpen', (event, info) => {
         if (info.type == 'youtube') {
             mainWindow.setMenu(menuExtYoutube);
-            mainWindow.loadURL('file://' + __dirname + '/embeddedYoutube.html');
+            mainWindow.loadURL(
+                'file://' + __dirname + '/embeddedYoutube.html',
+                { userAgent: 'Chrome' }
+            );
             mainWindow.webContents.executeJavaScript(
                 " document.getElementById('player').src='" +
                     info.path +
@@ -2305,61 +2329,64 @@ app.on('ready', function () {
         }
     });
 
-    mainWindow.webContents.session.webRequest.onHeadersReceived({}, (d, c) => {
-        if (
-            d.responseHeaders['x-frame-options'] ||
-            d.responseHeaders['X-Frame-Options']
-        ) {
-            d.responseHeaders['x-frame-options'] = '*';
-            d.responseHeaders['X-Frame-Options'] = '*';
+    mainWindow.webContents.session.webRequest.onHeadersReceived(
+        { urls: ['*://*.youtube.com/*', '*://*.yesmovies.com/*'] },
+        (d, c) => {
+            if (
+                d.responseHeaders['x-frame-options'] ||
+                d.responseHeaders['X-Frame-Options']
+            ) {
+                d.responseHeaders['x-frame-options'] = '*';
+                d.responseHeaders['X-Frame-Options'] = '*';
+            }
+            c({
+                cancel: false,
+                responseHeaders: d.responseHeaders,
+            });
         }
-        c({
-            cancel: false,
-            responseHeaders: d.responseHeaders,
-        });
-    });
-    autoUpdater.checkForUpdatesAndNotify();
-    autoUpdater.on('checking-for-update', () => {
-        mainWindow.webContents.send('updateCheck', 'Checking for update...');
-    });
-    autoUpdater.on('update-available', (info) => {
-        mainWindow.webContents.send(
-            'updateAvailable',
-            'Update available.' + info
-        );
-    });
-    autoUpdater.on('update-not-available', (info) => {
-        mainWindow.webContents.send(
-            'noUpdates',
-            'Update not available.' + info
-        );
-    });
-    autoUpdater.on('error', (err) => {
-        mainWindow.webContents.send(
-            'updateError',
-            'An error occurred while checking for updates ' + err
-        );
-    });
-    autoUpdater.on('download-progress', (progressObj) => {
-        let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
-        log_message =
-            log_message + ' - Downloaded ' + progressObj.percent + '%';
-        log_message =
-            log_message +
-            ' (' +
-            progressObj.transferred +
-            '/' +
-            progressObj.total +
-            ')';
-        mainWindow.webContents.send('updateProgress', log_message);
-    });
-    autoUpdater.on('update-downloaded', (info) => {
-        mainWindow.webContents.send(
-            'installingUPdate',
-            'Update was downloaded , installing the update' + info
-        );
-        autoUpdater.quitAndInstall();
-    });
+    );
+    // autoUpdater.checkForUpdatesAndNotify();
+    // autoUpdater.on('checking-for-update', () => {
+    //     mainWindow.webContents.send('updateCheck', 'Checking for update...');
+    // });
+    // autoUpdater.on('update-available', (info) => {
+    //     mainWindow.webContents.send(
+    //         'updateAvailable',
+    //         'Update available.' + info
+    //     );
+    // });
+    // autoUpdater.on('update-not-available', (info) => {
+    //     mainWindow.webContents.send(
+    //         'noUpdates',
+    //         'Update not available.' + info
+    //     );
+    // });
+    // autoUpdater.on('error', (err) => {
+    //     mainWindow.webContents.send(
+    //         'updateError',
+    //         'An error occurred while checking for updates ' + err
+    //     );
+    // });
+    // autoUpdater.on('download-progress', (progressObj) => {
+    //     let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
+    //     log_message =
+    //         log_message + ' - Downloaded ' + progressObj.percent + '%';
+    //     log_message =
+    //         log_message +
+    //         ' (' +
+    //         progressObj.transferred +
+    //         '/' +
+    //         progressObj.total +
+    //         ')';
+    //     mainWindow.webContents.send('updateProgress', log_message);
+    // });
+    // autoUpdater.on('update-downloaded', (info) => {
+    //     mainWindow.webContents.send(
+    //         'installingUPdate',
+    //         'Update was downloaded , installing the update' + info
+    //     );
+    //     autoUpdater.quitAndInstall();
+    // });
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
         mainWindow.removeAllListeners();

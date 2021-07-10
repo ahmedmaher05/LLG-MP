@@ -1,45 +1,56 @@
 <html>
+    <head>
+        <style></style>
 
-<head>
+        <link rel="stylesheet" href="./styles/MP.css" />
+        <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+            integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+        />
+        <script src="https://kraaden.github.io/autocomplete/autocomplete.js"></script>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://kraaden.github.io/autocomplete/autocomplete.css"
+        />
+    </head>
 
-    <link rel="stylesheet" href="./styles/MP.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-</head>
-
-<body>
-    <title>LLG Media Player</title>
-    <div id="player" class="noselect">
-    </div>
-    <div id="drag-file">
-    </div>
-    <div class="captions-area"></div>
-    <div class="captions-display"></div>
-</body>
-
+    <body>
+        <title>LLG Media Player</title>
+        <div id="player" class="noselect"></div>
+        <div id="drag-file"></div>
+        <div class="captions-area"></div>
+        <div class="captions-display"></div>
+    </body>
 </html>
 <script defer>
     var mainVar = require('electron').remote;
-    mainVar.getGlobal('visitor').pageview("/MediaPl").send();
-    window.onload= () => {
-    //write your code here
-    var divChild = document.createElement('div');
-    var txt = '<label class="switch"><input id="autoreplay" type="checkbox"><span class="slider round"></span><div class="replay">AutoReplay</div></label>';
-    divChild.innerHTML = txt.trim(); 
-    var parent = document.querySelectorAll(".wcp-time") ; 
-    parent[0].insertAdjacentElement('afterend',divChild.firstChild);
+    mainVar.getGlobal('visitor').pageview('/MediaPl').send();
+    window.onload = () => {
+        //write your code here
+        var divChild = document.createElement('div');
+        var txt =
+            '<label class="switch"><input id="autoreplay" type="checkbox"><span class="slider round"></span><div class="replay">AutoReplay</div></label>';
+        divChild.innerHTML = txt.trim();
+        var parent = document.querySelectorAll('.wcp-time');
+        parent[0].insertAdjacentElement('afterend', divChild.firstChild);
 
-    var divChild2 = document.createElement('div');
-    var txt = '<label><button id="clearplaylist">Clear Playlist</button></label>';
-    divChild2.innerHTML = txt.trim(); 
-    var parent2 = document.querySelectorAll(".wcp-playlist") ; 
-    parent2[0].insertAdjacentElement('beforeend',divChild2.firstChild);
-
-}
+        var divChild2 = document.createElement('div');
+        var txt =
+            '<label><button id="clearplaylist">Clear Playlist</button></label>';
+        divChild2.innerHTML = txt.trim();
+        var parent2 = document.querySelectorAll('.wcp-playlist');
+        parent2[0].insertAdjacentElement('beforeend', divChild2.firstChild);
+    };
 </script>
-<script src="./scripts/vtt.js"> </script>
-<script src="./scripts/swal.js"> </script>
+<script src="./scripts/vtt.js"></script>
+<script src="./scripts/swal.js"></script>
 <script src="./scripts/MpRenderer.js"></script>

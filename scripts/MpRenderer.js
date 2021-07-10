@@ -1,18 +1,19 @@
 var wjs = require('wcjs-player');
-delete wjs.hideUI;
 var mainVar = require('electron').remote;
-var ipc = require('electron').ipcRenderer;
+const electron = require('electron');
+
+var subsrt = require('subsrt');
 var originalText = '';
 var translatedText = '';
 var originalLang = '';
 var translatedLang = '';
-
+var autocomplete = require('autocompleter');
 const OS = require('opensubtitles-api');
 var gtts = require('node-gtts')('en');
-gtts.createServer(8668);
+gtts.createServer(14633);
 const LanguageDetect = require('languagedetect');
-const lngDetector = new LanguageDetect();
-lngDetector.setLanguageType('iso2');
+//const lngDetector = new LanguageDetect();
+//lngDetector.setLanguageType('iso2');
 var appVersion = require('electron').remote.app.getVersion();
 const OpenSubtitles = new OS({
     useragent: 'LLG-MP v0.1',
@@ -22,7 +23,6 @@ const { shell } = require('electron');
 var { translate } = require('google-translate-api-browser');
 var $ = require('jquery');
 var Datastore = require('nedb');
-const wcjsPrebuilt = require('wcjs-prebuilt');
 const Text2Speech = require('node-gtts');
 var db = new Datastore({
     filename: mainVar.getGlobal('dirName').dirname,
@@ -30,16 +30,18 @@ var db = new Datastore({
 });
 var captionsDisplay = document.querySelector('.captions-display');
 var regions = [];
+
 global.cues = [];
+const ipc = electron.ipcRenderer;
 global.lyrics = false;
 global.lyricsText = '';
 global.mediaPath = '';
 global.currentPos = 0;
 var player = new wjs('#player').addPlayer({
     autoplay: true,
-    wcjs: require('wcjs-prebuilt'),
+    wcjs: require('webchimera.js'),
 });
-ipc.on('updateCheck', function (event, message) {
+require('electron').ipcRenderer.on('updateCheck', function (event, message) {
     swal.fire(message);
 });
 ipc.on('updateAvailable', function (event, message) {
@@ -60,7 +62,7 @@ ipc.on('installingUPdate', function (event, message) {
 if (mainVar.getGlobal('filePath')) {
     player.vlc.play('file:///' + mainVar.getGlobal('filePath'));
     mediaPath = mainVar.getGlobal('filePath').replace(/\\/gi, '/');
-    loadSubtitles(mediaPath);
+    if (player.playing()) loadSubtitles(mediaPath);
 }
 ipc.on('openmedia', function (event, message) {
     Swal.fire({
@@ -79,16 +81,31 @@ ipc.on('openmedia', function (event, message) {
 ipc.on('opensub', function (event, message) {
     Swal.fire({
         title: 'Select subtitles file',
-        html: 'note: Only .srt and .vtt formats are supported',
+        html: 'Supported formats:.srt,.vtt,.ass,.ssa,.sub,.sbv,.smi,.lrc,.json',
         input: 'file',
         inputAttributes: {
-            accept: '.vtt,.srt',
+            accept: '.srt,.vtt,.ass,.ssa,.sub,.sbv,.smi,.lrc,.json',
             'aria-label': 'choose your subtitles file',
         },
     }).then((result) => {
         loadSubtitles(result.value.path);
     });
 });
+
+// ipc.on('lyrics', function (event, message) {
+//     swal.fire({
+//         title: 'Enter artist name & song name',
+//         html:
+//             'Artist name : <input id="searchArtist" onkeydown="apiCallArtist()"><br> <br>\
+//          Song name : <input id="searchSong" oninput="apiCallSong()">',
+//         // +
+//         // '<input type="text" class="form-control" id="searchSong" value="" oninput="apiCallSong()">',
+//     }).then(function (result) {
+//         var artist = result['value'][0];
+//         var song = result['value'][1];
+//     });
+// });
+
 ipc.on('lyrics', function (event, message) {
     swal.fire({
         text: 'please enter song name',
@@ -373,10 +390,16 @@ document.ondragover = document.ondrop = (ev) => {
 document.getElementsByClassName('wcp-menu')[0].ondrop = (ev) => {
     drop(ev);
     for (let i = 0; i < ev.dataTransfer.files.length; i++) {
-        console.log(ev.dataTransfer.files[i].path);
         if (
             ev.dataTransfer.files[i].path.split('.').pop() != 'srt' &&
-            ev.dataTransfer.files[i].path.split('.').pop() != 'vtt'
+            ev.dataTransfer.files[i].path.split('.').pop() != 'vtt' &&
+            ev.dataTransfer.files[i].path.split('.').pop() != 'ass' &&
+            ev.dataTransfer.files[i].path.split('.').pop() != 'ssa' &&
+            ev.dataTransfer.files[i].path.split('.').pop() != 'sub' &&
+            ev.dataTransfer.files[i].path.split('.').pop() != 'sbv' &&
+            ev.dataTransfer.files[i].path.split('.').pop() != 'smi' &&
+            ev.dataTransfer.files[i].path.split('.').pop() != 'lrc' &&
+            ev.dataTransfer.files[i].path.split('.').pop() != 'json'
         ) {
             mediaPath = ev.dataTransfer.files[i].path.replace(/\\/gi, '/');
             if (player.itemDesc(0).title) {
@@ -420,7 +443,14 @@ document.getElementsByClassName('wcp-surface')[0].ondrop = (ev) => {
     drop(ev);
     if (
         ev.dataTransfer.files[0].path.split('.').pop() != 'srt' &&
-        ev.dataTransfer.files[0].path.split('.').pop() != 'vtt'
+        ev.dataTransfer.files[0].path.split('.').pop() != 'vtt' &&
+        ev.dataTransfer.files[0].path.split('.').pop() != 'ass' &&
+        ev.dataTransfer.files[0].path.split('.').pop() != 'ssa' &&
+        ev.dataTransfer.files[0].path.split('.').pop() != 'sub' &&
+        ev.dataTransfer.files[0].path.split('.').pop() != 'sbv' &&
+        ev.dataTransfer.files[0].path.split('.').pop() != 'smi' &&
+        ev.dataTransfer.files[0].path.split('.').pop() != 'lrc' &&
+        ev.dataTransfer.files[0].path.split('.').pop() != 'json'
     ) {
         doCaptions('');
         mediaPath = ev.dataTransfer.files[0].path.replace(/\\/gi, '/');
@@ -448,95 +478,187 @@ function drop(evt) {
 }
 
 function loadSubtitles(fpath) {
-    var xhr = new XMLHttpRequest();
-    var xhr2 = new XMLHttpRequest();
-    xhr.open('GET', 'file:///' + fpath.split(/(?:\.([^.]+))?$/)[0] + '.vtt');
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && this.status == 200) {
-            doCaptions(xhr.responseText);
+    var xhr_vtt = new XMLHttpRequest();
+    var xhr_srt = new XMLHttpRequest();
+    var xhr_ass = new XMLHttpRequest();
+    var xhr_ssa = new XMLHttpRequest();
+    var xhr_sub = new XMLHttpRequest();
+    var xhr_sbv = new XMLHttpRequest();
+    var xhr_smi = new XMLHttpRequest();
+    var xhr_lrc = new XMLHttpRequest();
+    var xhr_json = new XMLHttpRequest();
+
+    xhr_vtt.open(
+        'GET',
+        'file:///' + fpath.split(/(?:\.([^.]+))?$/)[0] + '.vtt'
+    );
+
+    xhr_vtt.onreadystatechange = function () {
+        if (xhr_vtt.readyState === 4 && this.status == 200) {
+            doCaptions(xhr_vtt.responseText);
         }
     };
-    xhr.send();
-    xhr2.open(
+    xhr_vtt.send();
+
+    xhr_srt.open(
         'GET',
         'file:///' +
             fpath.replace(/\\/gi, '/').split(/(?:\.([^.]+))?$/)[0] +
             '.srt'
     );
-    xhr2.onreadystatechange = function () {
-        if (xhr2.readyState === 4 && xhr2.status == 200) {
-            var webvtt = srt2webvtt(xhr2.responseText);
+    xhr_srt.onreadystatechange = function () {
+        if (xhr_srt.readyState === 4 && xhr_srt.status == 200) {
+            var webvtt = subsrt.convert(xhr_srt.responseText, {
+                format: 'vtt',
+            });
             doCaptions(webvtt);
-        } else if (xhr2.readyState != 4 && xhr2.status != 200) {
+        } else if (xhr_srt.readyState != 4 && xhr_srt.status != 200) {
             swal.fire(
-                "couldn't find subtitle file . PS: only .srt and .vtt formats are currently supported "
+                "couldn't find subtitle file . PS: supported formats : .srt,.vtt,.ass,.ssa,.sub,.sbv,.smi,.lrc,.json"
             );
         }
     };
-    xhr2.send();
-}
+    xhr_srt.send();
 
-function srt2webvtt(data) {
-    var srt = data.replace(/\r+/g, '');
-    srt = srt.replace(/^\s+|\s+$/g, '');
-    var cuelist = srt.split('\n\n');
-    var result = '';
-    if (cuelist.length > 0) {
-        result += 'WEBVTT\n\n';
-        for (var i = 0; i < cuelist.length; i = i + 1) {
-            result += convertSrtCue(cuelist[i]);
+    xhr_ass.open(
+        'GET',
+        'file:///' +
+            fpath.replace(/\\/gi, '/').split(/(?:\.([^.]+))?$/)[0] +
+            '.ass'
+    );
+    xhr_ass.onreadystatechange = function () {
+        if (xhr_ass.readyState === 4 && xhr_ass.status == 200) {
+            var webvtt = subsrt.convert(xhr_ass.responseText, {
+                format: 'vtt',
+            });
+            doCaptions(webvtt);
+        } else if (xhr_ass.readyState != 4 && xhr_ass.status != 200) {
+            swal.fire(
+                "couldn't find subtitle file . PS: supported formats : .srt,.vtt,.ass,.ssa,.sub,.sbv,.smi,.lrc,.json"
+            );
         }
-    }
-    return result;
-}
+    };
+    xhr_ass.send();
 
-function convertSrtCue(caption) {
-    var cue = '';
-    var s = caption.split(/\n/);
-    while (s.length > 3) {
-        for (var i = 3; i < s.length; i++) {
-            s[2] += '\n' + s[i];
+    xhr_ssa.open(
+        'GET',
+        'file:///' +
+            fpath.replace(/\\/gi, '/').split(/(?:\.([^.]+))?$/)[0] +
+            '.ssa'
+    );
+    xhr_ssa.onreadystatechange = function () {
+        if (xhr_ssa.readyState === 4 && xhr_ssa.status == 200) {
+            var webvtt = subsrt.convert(xhr_ssa.responseText, {
+                format: 'vtt',
+            });
+            doCaptions(webvtt);
+        } else if (xhr_ssa.readyState != 4 && xhr_ssa.status != 200) {
+            swal.fire(
+                "couldn't find subtitle file . PS: supported formats : .srt,.vtt,.ass,.ssa,.sub,.sbv,.smi,.lrc,.json"
+            );
         }
-        s.splice(3, s.length - 3);
-    }
-    var line = 0;
-    if (!s[0].match(/\d+:\d+:\d+/) && s[1].match(/\d+:\d+:\d+/)) {
-        cue += s[0].match(/\w+/) + '\n';
-        line += 1;
-    }
-    if (s[line].match(/\d+:\d+:\d+/)) {
-        var m = s[1].match(
-            /(\d+):(\d+):(\d+)(?:,(\d+))?\s*--?>\s*(\d+):(\d+):(\d+)(?:,(\d+))?/
-        );
-        if (m) {
-            cue +=
-                m[1] +
-                ':' +
-                m[2] +
-                ':' +
-                m[3] +
-                '.' +
-                m[4] +
-                ' --> ' +
-                m[5] +
-                ':' +
-                m[6] +
-                ':' +
-                m[7] +
-                '.' +
-                m[8] +
-                '\n';
-            line += 1;
-        } else {
-            return '';
+    };
+    xhr_ssa.send();
+
+    xhr_sub.open(
+        'GET',
+        'file:///' +
+            fpath.replace(/\\/gi, '/').split(/(?:\.([^.]+))?$/)[0] +
+            '.sub'
+    );
+    xhr_sub.onreadystatechange = function () {
+        if (xhr_sub.readyState === 4 && xhr_sub.status == 200) {
+            var webvtt = subsrt.convert(xhr_sub.responseText, {
+                format: 'vtt',
+            });
+            doCaptions(webvtt);
+        } else if (xhr_sub.readyState != 4 && xhr_sub.status != 200) {
+            swal.fire(
+                "couldn't find subtitle file . PS: supported formats : .srt,.vtt,.ass,.ssa,.sub,.sbv,.smi,.lrc,.json"
+            );
         }
-    } else {
-        return '';
-    }
-    if (s[line]) {
-        cue += s[line] + '\n\n';
-    }
-    return cue;
+    };
+    xhr_sub.send();
+
+    xhr_sbv.open(
+        'GET',
+        'file:///' +
+            fpath.replace(/\\/gi, '/').split(/(?:\.([^.]+))?$/)[0] +
+            '.sbv'
+    );
+    xhr_sbv.onreadystatechange = function () {
+        if (xhr_sbv.readyState === 4 && xhr_sbv.status == 200) {
+            var webvtt = subsrt.convert(xhr_sbv.responseText, {
+                format: 'vtt',
+            });
+            doCaptions(webvtt);
+        } else if (xhr_sbv.readyState != 4 && xhr_sbv.status != 200) {
+            swal.fire(
+                "couldn't find subtitle file . PS: supported formats : .srt,.vtt,.ass,.ssa,.sub,.sbv,.smi,.lrc,.json"
+            );
+        }
+    };
+    xhr_sbv.send();
+
+    xhr_smi.open(
+        'GET',
+        'file:///' +
+            fpath.replace(/\\/gi, '/').split(/(?:\.([^.]+))?$/)[0] +
+            '.smi'
+    );
+    xhr_smi.onreadystatechange = function () {
+        if (xhr_smi.readyState === 4 && xhr_smi.status == 200) {
+            var webvtt = subsrt.convert(xhr_smi.responseText, {
+                format: 'vtt',
+            });
+            doCaptions(webvtt);
+        } else if (xhr_smi.readyState != 4 && xhr_smi.status != 200) {
+            swal.fire(
+                "couldn't find subtitle file . PS: supported formats : .srt,.vtt,.ass,.ssa,.sub,.sbv,.smi,.lrc,.json"
+            );
+        }
+    };
+    xhr_smi.send();
+
+    xhr_lrc.open(
+        'GET',
+        'file:///' +
+            fpath.replace(/\\/gi, '/').split(/(?:\.([^.]+))?$/)[0] +
+            '.lrc'
+    );
+    xhr_lrc.onreadystatechange = function () {
+        if (xhr_lrc.readyState === 4 && xhr_lrc.status == 200) {
+            var webvtt = subsrt.convert(xhr_lrc.responseText, {
+                format: 'vtt',
+            });
+            doCaptions(webvtt);
+        } else if (xhr_lrc.readyState != 4 && xhr_lrc.status != 200) {
+            swal.fire(
+                "couldn't find subtitle file . PS: supported formats : .srt,.vtt,.ass,.ssa,.sub,.sbv,.smi,.lrc,.json"
+            );
+        }
+    };
+    xhr_lrc.send();
+
+    xhr_json.open(
+        'GET',
+        'file:///' +
+            fpath.replace(/\\/gi, '/').split(/(?:\.([^.]+))?$/)[0] +
+            '.json'
+    );
+    xhr_json.onreadystatechange = function () {
+        if (xhr_json.readyState === 4 && xhr_json.status == 200) {
+            var webvtt = subsrt.convert(xhr_json.responseText, {
+                format: 'vtt',
+            });
+            doCaptions(webvtt);
+        } else if (xhr_json.readyState != 4 && xhr_json.status != 200) {
+            swal.fire(
+                "couldn't find subtitle file . PS: supported formats : .srt,.vtt,.ass,.ssa,.sub,.sbv,.smi,.lrc,.json"
+            );
+        }
+    };
+    xhr_json.send();
 }
 
 function doCaptions(caption) {
@@ -605,7 +727,6 @@ function doSomethingWithSelectedText() {
                     if (lyrics) {
                         translatedLang = lang;
                         translatedText = res.text;
-                        console.log('test1' + translatedText);
                         Swal.fire({
                             html:
                                 '<span>' +
@@ -1314,12 +1435,8 @@ Text2Speech.LANGUAGES = $(document).on(
     '#play-sound-original',
     function () {
         var a = new Audio(
-            'http://localhost:8668/?text=' +
-                encodeURIComponent(originalText) +
-                '&lang=' +
-                originalLang.toLowerCase()
+            'http://localhost:14633/?text=' + encodeURIComponent(originalText)
         );
-        originalLang = lngDetector.detect(originalText, 1)[0][0];
 
         a.play();
     }
@@ -1327,7 +1444,7 @@ Text2Speech.LANGUAGES = $(document).on(
 
 $(document).on('click', '#play-sound-translated', function () {
     var a = new Audio(
-        'http://localhost:8668/?text=' +
+        'http://localhost:14633/?text=' +
             encodeURIComponent(translatedText) +
             '&lang=' +
             translatedLang.toLowerCase()
@@ -1372,3 +1489,96 @@ document.addEventListener('keydown', function (e) {
 
 captionsDisplay.onmouseup = doSomethingWithSelectedText;
 captionsDisplay.onkeyup = doSomethingWithSelectedText;
+
+function getData() {
+    var artist = document.getElementById('searchArtist').value;
+    var resComplete = [{}];
+
+    for (var i = 1; i <= 1; i++) {
+        $.get(
+            'https://search.azlyrics.com/search.php?q=' +
+                artist.replace(/\s/g, '') +
+                '&w=artists&p=' +
+                i,
+            function (responseText) {
+                const newHTMLDocument = document.implementation.createHTMLDocument();
+                newHTMLDocument.open();
+                newHTMLDocument.write(responseText);
+                newHTMLDocument.close();
+
+                const elements = newHTMLDocument.getElementsByClassName(
+                    'col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center'
+                )[0];
+                if (elements.childNodes[1].className != 'alert alert-warning') {
+                    var elm = elements.children[0].children[1].children[0];
+                    for (var j = 0; j < elm.children.length; j++) {
+                        if (
+                            elm.children[j].children[0].children[0]
+                                .children[0] != undefined &&
+                            elm.children[
+                                j
+                            ].children[0].children[0].children[0].innerText.replace(
+                                /\s/g,
+                                ''
+                            ) != ''
+                        ) {
+                            resComplete.push({
+                                label:
+                                    elm.children[j].children[0].children[0]
+                                        .children[0].innerText,
+                            });
+                        }
+                    }
+                } else {
+                    console.log('casnnot find this artist');
+                }
+            }
+        ).fail(function () {
+            console.log(artist, 'cannot find this artist');
+        });
+    }
+
+    return resComplete;
+}
+
+function suggest(data) {
+    var input = document.getElementById('searchArtist');
+
+    if (
+        data.slice(1, data.length - 1) != undefined ||
+        data.slice(1, data.length - 1).length != 0
+    ) {
+        autocomplete({
+            input: input,
+            fetch: function (text, update) {
+                console.log('entered1', input);
+                text = text.toLowerCase();
+                var suggestions = data
+                    .slice(1, data.length - 1)
+                    .filter((n) => n.label.toLowerCase().startsWith(text));
+                update(suggestions);
+            },
+            onSelect: function (item) {
+                input.value = item.label;
+                console.log('entered2');
+            },
+        });
+    }
+}
+var timer = null;
+function apiCallArtist() {
+    clearTimeout(timer);
+    timer = setTimeout(doStuff, 1000);
+}
+
+function doStuff() {
+    const data = getData();
+    suggest(data);
+}
+
+function apiCallSong() {
+    console.log(
+        document.getElementById('searchArtist').value,
+        document.getElementById('searchSong').value
+    );
+}

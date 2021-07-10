@@ -212,3 +212,9 @@ kbd {
     width: 30px;
     height: 30px;
  }   
+
+
+
+ .swal2-container{
+     z-index:4!important ;
+ }

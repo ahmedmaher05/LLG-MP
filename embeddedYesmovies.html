@@ -1,27 +1,38 @@
 <html>
-
-<head>
-    <link rel="stylesheet" href="./styles//embeddedYM.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<iframe id="player" allowfullscreen="true" src="https://yesmovies.to/"
-    sandbox="allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox allow-same-origin">
-</iframe>
-<title>LLG Media Player</title>
-<div id="drag-file">
-</div>
-<div class="captions-area"></div>
-<div class="captions-display"></div>
-<script src="./scripts/vtt.js"> </script>
-<script src="./scripts/swal.js"> </script>
-<script src="./scripts/MpRenderer.js"></script>
-<script src="./scripts/ExtRenderer.js"></script>
-<script>
-    var mainVar = require('electron').remote;
-    mainVar.getGlobal('visitor').pageview("/Yesmovies").send()
-</script>
-
+    <head>
+        <link rel="stylesheet" href="./styles//embeddedYM.css" />
+        <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+            integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+        />
+    </head>
+    <iframe
+        id="player"
+        is="x-frame-bypass"
+        allowfullscreen="true"
+        src="https://yesmovies.to/"
+        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-top-navigation"
+    >
+    </iframe>
+    <title>LLG Media Player</title>
+    <div id="drag-file"></div>
+    <div class="captions-area"></div>
+    <div class="captions-display"></div>
+    <script src="./scripts/vtt.js"></script>
+    <script src="./scripts/swal.js"></script>
+    <script src="./scripts/MpRenderer.js"></script>
+    <script src="./scripts/ExtRenderer.js"></script>
+    <script type="module" src="https://unpkg.com/x-frame-bypass"></script>
+    <script>
+        var mainVar = require('electron').remote;
+        mainVar.getGlobal('visitor').pageview('/Yesmovies').send();
+    </script>
 </html>
