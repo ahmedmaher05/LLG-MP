@@ -98,7 +98,7 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 ![image not found](https://i.imgur.com/lbv4xl6.jpg)
 
 ## Users anonymous heat map generated via google analytics 
-![image not found](https://i.imgur.com/QXpaCzQ.png)
+![image not found](https://i.imgur.com/raPYwUW.png)
 
 ## TODO list(features)
 - [x] Normal media player (much like VLC)
