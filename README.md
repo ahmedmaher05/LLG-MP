@@ -2,6 +2,9 @@
 
  [![GitHub version](https://img.shields.io/github/v/tag/engMaher/LLG-MP)](https://badge.fury.io/gh/engMaher%2FLLG-MP) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0) [![Miro](https://img.shields.io/badge/wireframe-miro-yellow.svg)](https://miro.com/app/board/o9J_knGF4P8=/)  [![Github All Releases](https://img.shields.io/github/downloads/engMaher/LLG-MP/total)]()  [![Gitter](https://img.shields.io/gitter/room/engMaher/LLg-MP)](https://gitter.im/LLG-MP/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![GitHub contributors](https://img.shields.io/github/contributors-anon/engMaher/LLG-MP)]() [![GitHub contributors](https://img.shields.io/github/issues-raw/engMaher/LLG-MP)]() [![GitHub contributors](https://img.shields.io/github/issues-closed-raw/engMaher/LLG-MP)]() 
 
+[![Donate](https://img.shields.io/badge/Donate-Donorbox-green)](https://donorbox.org/llg-mp-donation)
+
+
 
  <!-- [![Build Status](https://travis-ci.org/emk/subtitles-rs.svg?branch=master)](https://travis-ci.org/emk/subtitles-rs) [![Build status](https://ci.appveyor.com/api/projects/status/3hn8cwckcdhpcasm/branch/master?svg=true)](https://ci.appveyor.comproject/emk/subtitles-rs/branch/master) -->
 
