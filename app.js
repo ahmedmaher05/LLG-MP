@@ -12,7 +12,7 @@ if (process.platform == 'win32' && process.env.ELECTRON_ENV != 'development') {
 }
 
 if (
-    process.platform == 'win32' &&
+    (process.platform == 'win32' || process.platform == 'darwin') &&
     process.mainModule.filename.indexOf('app.asar') === -1
 ) {
     process.env.VLC_PLUGIN_PATH = path.join(
@@ -20,14 +20,17 @@ if (
         './node_modules/wcjs-prebuilt/bin/plugins'
     );
 }
-if (process.platform == 'win32')
+
+if (process.platform == 'win32' || process.platform == 'darwin')
     process.env['VLC_PLUGIN_PATH'] = require('path').join(
         __dirname,
         'node_modules/webchimera.js/plugins'
     );
+
 if (process.argv.length >= 2) {
     global.filePath = process.argv[1];
 }
+
 const electron = require('electron');
 const { app, BrowserWindow, Menu } = electron;
 var ua = require('universal-analytics');
@@ -38,8 +41,8 @@ const { JSONStorage } = require('node-localstorage');
 var Datastore = require('nedb');
 var db = new Datastore({
     filename: path.join(
-        __dirname.substring(0, __dirname.lastIndexOf('\\') + 1),
-        '\\newVocab'
+        __dirname,
+        'newVocab'
     ),
     autoload: true,
 });
@@ -58,8 +61,8 @@ global.lang = {
 };
 global.dirName = {
     dirname: path.join(
-        __dirname.substring(0, __dirname.lastIndexOf('\\') + 1),
-        '\\newVocab'
+        __dirname,
+        'newVocab'
     ),
 };
 
@@ -823,6 +826,9 @@ var ExtWebsiteMenu_youtube = [
                         label: 'LLG-MP',
                         click() {
                             mainWindow.setMenu(menuMP);
+                            if (process.platform === "darwin") {
+                                Menu.setApplicationMenu(menuMP)
+                            }
                             mainWindow.loadURL(
                                 'file://' + __dirname + '/MediaPl.html'
                             );
@@ -1514,6 +1520,9 @@ var ExtWebsiteMenu_yesMovies = [
                         label: 'LLG-MP',
                         click() {
                             mainWindow.setMenu(menuMP);
+                            if (process.platform === "darwin") {
+                                Menu.setApplicationMenu(menuMP)
+                            }
                             mainWindow.loadURL(
                                 'file://' + __dirname + '/MediaPl.html'
                             );
@@ -2201,6 +2210,9 @@ var savedExpMenu = [
                         label: 'LLG-MP',
                         click() {
                             mainWindow.setMenu(menuMP);
+                            if (process.platform === "darwin") {
+                                Menu.setApplicationMenu(menuMP)
+                            }
                             mainWindow.loadURL(
                                 'file://' + __dirname + '/MediaPl.html'
                             );
@@ -2237,7 +2249,7 @@ var savedExpMenu = [
     },
 ];
 
-const menuMP = Menu.buildFromTemplate(mediaPlayerMenu);
+let menuMP;
 const menuSavedExp = Menu.buildFromTemplate(savedExpMenu);
 const menuExtYoutube = Menu.buildFromTemplate(ExtWebsiteMenu_youtube);
 const menuExtYesmovies = Menu.buildFromTemplate(ExtWebsiteMenu_yesMovies);
@@ -2245,7 +2257,7 @@ const menuExtYesmovies = Menu.buildFromTemplate(ExtWebsiteMenu_yesMovies);
 // initialization and ready for creating browser windows.
 // app.commandLine.appendSwitch('allow-file-access-from-files');
 
-app.on('ready', function () {
+function createWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         webPreferences: {
@@ -2279,7 +2291,20 @@ app.on('ready', function () {
         .catch((error) => {
             console.log(error);
         });
+
+    // Adds View menu to menu bar if not in production mode. This enables usage of developer tools during development.
+    if (process.env.ELECTRON_ENV !== 'production') {
+        const devToolsMenu = Object.values(Menu.getApplicationMenu().commandsMap).find(mi => mi.role === 'viewmenu')  
+        devToolsMenu.label = "Developer"
+        mediaPlayerMenu.push(devToolsMenu)
+    }
+
+    menuMP = Menu.buildFromTemplate(mediaPlayerMenu);
     mainWindow.setMenu(menuMP);
+
+    if(process.platform === "darwin") {
+        Menu.setApplicationMenu(menuMP)
+    }
     // if (process.platform == "win32" && process.mainModule.filename.indexOf('app.asar') === -1)
     //mainWindow.openDevTools({ mode: 'detach' });
     ipc.on('download', (event, info) => {
@@ -2317,6 +2342,9 @@ app.on('ready', function () {
             );
         } else if (info.type == 'local') {
             mainWindow.setMenu(menuMP);
+            if (process.platform === "darwin") {
+                Menu.setApplicationMenu(menuMP)
+            }
             mainWindow.loadURL('file://' + __dirname + '/MediaPl.html');
             mainWindow.webContents.executeJavaScript(
                 'player.vlc.play("file:///" + "' +
@@ -2387,10 +2415,26 @@ app.on('ready', function () {
     //     );
     //     autoUpdater.quitAndInstall();
     // });
+
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
         mainWindow.removeAllListeners();
         mainWindow = null;
-        app.quit();
     });
-});
+}
+
+app.on('ready', createWindow);
+
+app.on("window-all-closed", () => {
+    // For OSX application should stay active until user explicitly quits the app
+    if (process.platform !== "darwin") {
+        app.quit();
+    }
+})
+
+app.on("activate", () => {
+    // In OSX it's common to re-create a window in the app when the cok icon is clicked and there are no windows open.
+    if (mainWindow === null) {
+        createWindow()
+    }
+})

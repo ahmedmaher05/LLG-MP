@@ -10,15 +10,47 @@
 
 ![alt tag](https://i.imgur.com/kDqOC8w.png)
 ______________________________________________________________________________________________________________________________
-## what is LLG Media Player ? 
+- [LLG-MP 0.2.4](#llg-mp-024)
+  - [What is LLG Media Player ?](#what-is-llg-media-player-)
+  - [What is LLG-MP ?](#what-is-llg-mp-)
+  - [Platform Support](#platform-support)
+    - [Releases](#releases)
+    - [Experimental](#experimental)
+  - [LLG-MP features](#llg-mp-features)
+  - [LLG Media Player Features](#llg-media-player-features)
+  - [What can I do with LLG Media Player ?](#what-can-i-do-with-llg-media-player-)
+  - [How to use LLG Media Player ?](#how-to-use-llg-media-player-)
+- [Gallery](#gallery)
+  - [Demo youtube playlist demonstrating how to use LLG media player](#demo-youtube-playlist-demonstrating-how-to-use-llg-media-player)
+  - [Pictures from the media player](#pictures-from-the-media-player)
+  - [Users anonymous heat map generated via google analytics](#users-anonymous-heat-map-generated-via-google-analytics)
+- [TODO list(features)](#todo-listfeatures)
+- [Development](#development)
+  - [Quickstart](#quickstart)
+    - [Run Details](#run-details)
+  - [Mac Details](#mac-details)
+    - [Codesigning an executable for Mac (non-production)](#codesigning-an-executable-for-mac-non-production)
+- [Acknowledgments](#acknowledgments)
+______________________________________________________________________________________________________________________________
+## What is LLG Media Player ? 
 
 Language Learning Gamification Media Player
 * This software is under  AGPLv3 license
 
 ______________________________________________________________________________________________________________________________
-## what is LLG-MP ?
+## What is LLG-MP ?
 
 LLG media player is an <a href="https://electronjs.org/">Electron</a> based open source media player built with <a href="https://github.com/RSATom/WebChimera.js">webchimera.js</a> which provides javscript bindings for <a href="https://www.videolan.org/vlc/libvlc.html">libvlc</a>, it's main purpose is to gamify the language learning process through appending clickable subtitles/lyrics to different types of local/remote media with an onclick instant translation during the media stream flow , it also provides the ability to save new words/expressions along with their translations for future reference ,the clickable subtitles/lyrics functionality is performed through the manipulation of <a href="https://github.com/mozilla/vtt.js?files=1">vtt.js library</a> which is Mozilla's implementation of <a href="https://en.wikipedia.org/wiki/WebVTT">WEBVTT standard</a> <br>
+
+## Platform Support
+
+### Releases
+* Windows: 64 bit
+
+### Experimental
+* Linux
+* Mac
+  * Catalina 10.15
 ## LLG-MP features
 
 * Media player:
@@ -35,7 +67,6 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 	*  Play words/phrases sound  (original &translated)
 	*  Play forward/backward & volume up/down using keyboard arrow keys
     * Support all subtitles formats (.srt,.vtt,.ass,.ssa,.sub,.sbv,.smi,.lrc,.json)
-    * Linux support
 <br>
 
 * As a language learning gamification framework:
@@ -45,15 +76,7 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
   * Automaticlly download subtitles file and append it to either local media or remote media from youtube/yesmovies videos (clickable & translatable)
   * Ability to fetch songs lyrics by song name & singer name then show it on either local media or remote media from youtube/yesmovies (clickable & translatable)  
 
-## what can i do with LLG-MP ?
-* You can use it as a regular media player much like vlc
-* Browse pc for a subtitles file to be appended to youtube / yesmovies videos
-* Search and fetch lyrics while playing youtube songs with controls over the video through keyboard buttons
-* Browse PC for subtitles file and append it to local media / youtube video / yesmovies video
-* Refer to new words/expressions in savedWords view
-* Download subtitles files (by either media hash or specifying movie/series name) and append them to either local media file or youtube/yesmovies videos .
-
-## LLG Media Player features 
+## LLG Media Player Features 
 * Supports almost all media formats much like VLC media player as both are built on the same media engine (libvlc)  
 * Supports popular subtitles files such as .vtt & .srt
 * Transforms subtitles/lyrics words and phrases into clickable strings , once clicked their google translation appears 
@@ -63,7 +86,7 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 * Ability to import subtitles file and append it to either local media or remote media from youtube/yesmovies videos (clickable & translatable)
 * Ability to save new words/phrases along with their translation , local media path/remote media url and time of occurence in the media file
 
-## what can i do with LLG Media Player ?
+## What can I do with LLG Media Player ?
 * You can use it as a regular media player much like vlc 
 * Browse pc for a subtitles file to be appended to youtube / yesmovies videos 
 * Search and fetch lyrics while playing youtube songs with controls over the video through keyboard buttons 
@@ -74,25 +97,9 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 ## How to use LLG Media Player ? 
 * As a regular user : download and install the latest release from this <a href="https://github.com/engMaher/LLG-MP/releases">link</a> which complies with your operation system type/architecture [currently only windows 64-bit is supported] 
 
-* As a contributer :
-   * Windows
+* As a contributer, see [Development](#development).
 
-        ``` git clone https://github.com/engMaher/LLG-MP.git ```<br>
-        ```npm install```<br>
-        ```npm run postinstall-windows```<br>
-        ```npm run dev-windows```<br>
-
-
-    <br>
-    <br>
-
-    * Linux:<br>
-    ``` git clone https://github.com/engMaher/LLG-MP.git ```<br>
-    ```npm install```<br>
-    ```npm run postinstall-linux```<br>
-    ```npm run dev-linux ```
-    <br><br>
-
+# Gallery
 ## [Demo youtube playlist demonstrating how to use LLG media player](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1)
 
 [![Watch the video](https://i.imgur.com/QSuecRg.png)](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1)
@@ -103,7 +110,7 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 ## Users anonymous heat map generated via google analytics 
 ![image not found](https://i.imgur.com/raPYwUW.png)
 
-## TODO list(features)
+# TODO list(features)
 - [x] Normal media player (much like VLC)
 - [x] Clickable/translatable subtitles & lyrics
 - [x] Drag & drop for Media files & subtitles files
@@ -119,6 +126,8 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 - [x] Adding support for subtitles formats (.srt,.vtt,.ass,.ssa,.sub,.sbv,.smi,.lrc,.json)
 - [x] Play forward/backward & volume up/down using keyboard arrow keys
 - [x] Linux support
+- [x] Mac OS support
+- [ ] Add translate "from" option instead of only allowing auto detection
 - [ ] Implementation of user authentication system & synchronization between different instances of LLG-MP for group/party learning remotely  
 - [ ] Adding a torrent client
 - [ ] Adding ANKI interface & user tests from saved words view
@@ -126,13 +135,116 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 - [ ] Chrome extension for using LLG-MP with different media sources online
 - [ ] Making the media player cross platform and signing it in both appstore and windows store
 
-## Contributing
+# Development
 - For developers : you can send pull requests with TODO features implementation and fix issues opened by users
 - For users : you can test the executable and file issues and request features 
 
 For more information please read [CONTRIBUTING.md](https://gist.github.com/engMaher/6a6080973f2c7be7285aeec17bce4c56) for details on our code of conduct, and the process for submitting pull requests to us.
 
-## Acknowledgments
+## Quickstart
+
+<table>
+<tr>
+<td></td>
+<th>Windows</th>
+<th>Linux</th>
+<th>Mac</th>
+</tr>
+<tr>
+<th>Setup & Install</th>   
+<td> 
+
+```
+git clone https://github.com/engMaher/LLG-MP.git
+npm install
+npm run postinstall-windows
+```
+
+</td>
+<td> 
+
+```
+git clone https://github.com/engMaher/LLG-MP.git
+npm install
+npm run postinstall-linux
+```
+
+</td>
+<td> 
+
+```
+git clone https://github.com/engMaher/LLG-MP.git
+npm run preinstall-mac
+npm install
+npm run postinstall-mac
+```
+
+</td>
+</tr>
+<tr>
+<th>Run</th>
+<td>
+
+```
+npm run dev-windows 
+```
+
+</td>
+<td>
+
+```
+npm run dev-linux 
+```
+
+</td>
+<td>
+
+```
+npm run dev-mac 
+```
+
+</td>
+</tr>
+<tr>
+<th>Compile Executable</th>
+<td>
+
+```
+npm run dist:windows
+```
+
+</td>
+<td>
+
+```
+npm run dist:linux
+```
+
+</td>
+<td>
+
+```
+npm run predist:mac
+npm run dist:mac
+```
+
+</td>
+</tr>
+</table>
+<br>
+
+### Run Details
+The run scripts watch for changes made to LLG-MP while it's running, making it easy to view code changes.
+
+## Mac Details
+### Codesigning an executable for Mac (non-production)
+
+Running `npm run dist:mac` attempts to codesign the executable  being created. In order to codesign for development purposes, you'll need to have a `Mac Developer: someEmail@email.com (someName)` certificate that is valid and trusted with "Use System Defaults". Check the `Keychain Access` Mac app to see if your cert exists and is valid.
+If you don't have one or yours is expired, use a search engine to look up how to obtain one. You should be able to get a free Mac Development cert from Apple; you don't need a paid one.
+
+You'll also need the intermediate signing certificate to use your developer certificate. Follow the instructions in this [Stack Overflow post](https://stackoverflow.com/a/66083449/6841414) to obtain one. This cert also should be set to be trusted with "Use System Defaults."
+
+# Acknowledgments
 - The open source community for sharing knowledge 
 - Opensubtitles <a href="http://trac.opensubtitles.org/projects/opensubtitles/wiki/DevReadFirst"> support team </a> for granting LLG Media Player an API agent for free
 - <a href="https://electronjs.org/community"> Electron </a> and <a href="https://github.com/RSATom/WebChimera.js">Webchimera.js</a> communities for the support
