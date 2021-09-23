@@ -4,10 +4,14 @@ const { session } = require('electron');
 // Query all cookies associated with a specific url.
 
 const { download } = require('electron-dl');
-if (process.platform == 'win32' && process.env.ELECTRON_ENV != 'development') {
+if ((process.platform == 'win32' || process.platform === 'darwin') && process.env.ELECTRON_ENV != 'development') {
     process.env.VLC_PLUGIN_PATH = path.join(
-        __dirname.substring(0, __dirname.lastIndexOf('\\') + 1),
-        '\\app.asar.unpacked\\node_modules\\wcjs-prebuilt\\bin\\plugins'
+        path.basename(__dirname),
+        'app.asar.unpacked',
+        'node_modules',
+        'wcjs-prebuilt',
+        'bin',
+        'plugins'
     );
 }
 
@@ -41,7 +45,7 @@ const { JSONStorage } = require('node-localstorage');
 var Datastore = require('nedb');
 var db = new Datastore({
     filename: path.join(
-        __dirname,
+        path.basename(__dirname),
         'newVocab'
     ),
     autoload: true,
@@ -61,7 +65,7 @@ global.lang = {
 };
 global.dirName = {
     dirname: path.join(
-        __dirname,
+        path.basename(__dirname),
         'newVocab'
     ),
 };
