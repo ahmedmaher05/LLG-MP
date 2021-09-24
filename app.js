@@ -87,6 +87,24 @@ function applyMagick() {
     };
     rawFile.send(null);
 }
+
+function setMenu(window, menu) {
+    if (process.platform === "darwin") {
+        Menu.setApplicationMenu(menu)
+    } else {
+        window.setMenu(menu);
+    }    
+}
+
+function buildMenuFromTemplate(menu) {
+    // Adds View menu to menu bar if not in production mode. This enables usage of developer tools during development.
+    if (process.env.ELECTRON_ENV !== 'production') {
+        menu.push({role: 'viewMenu', label: "Developer"})
+    }
+    return Menu.buildFromTemplate(menu)
+}
+
+
 var mediaPlayerMenu = [
     {
         label: 'File',
@@ -123,7 +141,7 @@ var mediaPlayerMenu = [
                             {
                                 label: 'Youtube',
                                 click() {
-                                    mainWindow.setMenu(menuExtYoutube);
+                                    setMenu(mainWindow, menuExtYoutube);
                                     console.log('entered');
                                     mainWindow.loadURL(
                                         'file://' +
@@ -135,7 +153,7 @@ var mediaPlayerMenu = [
                             {
                                 label: 'Yesmovies',
                                 click() {
-                                    mainWindow.setMenu(menuExtYesmovies);
+                                    setMenu(mainWindow, menuExtYesmovies);
                                     mainWindow.loadURL(
                                         'file://' +
                                             __dirname +
@@ -148,7 +166,7 @@ var mediaPlayerMenu = [
                     {
                         label: 'Saved Words',
                         click() {
-                            mainWindow.setMenu(menuSavedExp);
+                            setMenu(mainWindow, menuSavedExp);
                             mainWindow.setSize(1000, 800);
                             mainWindow.loadURL(
                                 'file://' + __dirname + '/newExp.html'
@@ -816,7 +834,7 @@ var ExtWebsiteMenu_youtube = [
                             {
                                 label: 'Yesmovies',
                                 click() {
-                                    mainWindow.setMenu(menuExtYesmovies);
+                                    setMenu(mainWindow, menuExtYesmovies);
                                     mainWindow.loadURL(
                                         'file://' +
                                             __dirname +
@@ -829,10 +847,7 @@ var ExtWebsiteMenu_youtube = [
                     {
                         label: 'LLG-MP',
                         click() {
-                            mainWindow.setMenu(menuMP);
-                            if (process.platform === "darwin") {
-                                Menu.setApplicationMenu(menuMP)
-                            }
+                            setMenu(mainWindow, menuMP);
                             mainWindow.loadURL(
                                 'file://' + __dirname + '/MediaPl.html'
                             );
@@ -841,7 +856,7 @@ var ExtWebsiteMenu_youtube = [
                     {
                         label: 'Saved Words',
                         click() {
-                            mainWindow.setMenu(menuSavedExp);
+                            setMenu(mainWindow, menuSavedExp);
                             mainWindow.loadURL(
                                 'file://' + __dirname + '/newExp.html'
                             );
@@ -1510,7 +1525,7 @@ var ExtWebsiteMenu_yesMovies = [
                             {
                                 label: 'Youtube',
                                 click() {
-                                    mainWindow.setMenu(menuExtYoutube);
+                                    setMenu(mainWindow, menuExtYoutube);
                                     mainWindow.loadURL(
                                         'file://' +
                                             __dirname +
@@ -1523,10 +1538,7 @@ var ExtWebsiteMenu_yesMovies = [
                     {
                         label: 'LLG-MP',
                         click() {
-                            mainWindow.setMenu(menuMP);
-                            if (process.platform === "darwin") {
-                                Menu.setApplicationMenu(menuMP)
-                            }
+                            setMenu(mainWindow, menuMP);
                             mainWindow.loadURL(
                                 'file://' + __dirname + '/MediaPl.html'
                             );
@@ -1535,7 +1547,7 @@ var ExtWebsiteMenu_yesMovies = [
                     {
                         label: 'Saved Words',
                         click() {
-                            mainWindow.setMenu(menuSavedExp);
+                            setMenu(mainWindow, menuSavedExp);
                             mainWindow.loadURL(
                                 'file://' + __dirname + '/newExp.html'
                             );
@@ -2189,7 +2201,7 @@ var savedExpMenu = [
                             {
                                 label: 'Youtube',
                                 click() {
-                                    mainWindow.setMenu(menuExtYoutube);
+                                    setMenu(mainWindow, menuExtYoutube);
                                     mainWindow.loadURL(
                                         'file://' +
                                             __dirname +
@@ -2200,7 +2212,7 @@ var savedExpMenu = [
                             {
                                 label: 'Yesmovies',
                                 click() {
-                                    mainWindow.setMenu(menuExtYesmovies);
+                                    setMenu(mainWindow, menuExtYesmovies);
                                     mainWindow.loadURL(
                                         'file://' +
                                             __dirname +
@@ -2213,10 +2225,7 @@ var savedExpMenu = [
                     {
                         label: 'LLG-MP',
                         click() {
-                            mainWindow.setMenu(menuMP);
-                            if (process.platform === "darwin") {
-                                Menu.setApplicationMenu(menuMP)
-                            }
+                            setMenu(mainWindow, menuMP);
                             mainWindow.loadURL(
                                 'file://' + __dirname + '/MediaPl.html'
                             );
@@ -2254,9 +2263,9 @@ var savedExpMenu = [
 ];
 
 let menuMP;
-const menuSavedExp = Menu.buildFromTemplate(savedExpMenu);
-const menuExtYoutube = Menu.buildFromTemplate(ExtWebsiteMenu_youtube);
-const menuExtYesmovies = Menu.buildFromTemplate(ExtWebsiteMenu_yesMovies);
+const menuSavedExp = buildMenuFromTemplate(savedExpMenu);
+const menuExtYoutube = buildMenuFromTemplate(ExtWebsiteMenu_youtube);
+const menuExtYesmovies = buildMenuFromTemplate(ExtWebsiteMenu_yesMovies);
 // This method will be called when Electron has done everything
 // initialization and ready for creating browser windows.
 // app.commandLine.appendSwitch('allow-file-access-from-files');
@@ -2296,19 +2305,10 @@ function createWindow() {
             console.log(error);
         });
 
-    // Adds View menu to menu bar if not in production mode. This enables usage of developer tools during development.
-    if (process.env.ELECTRON_ENV !== 'production') {
-        const devToolsMenu = Object.values(Menu.getApplicationMenu().commandsMap).find(mi => mi.role === 'viewmenu')  
-        devToolsMenu.label = "Developer"
-        mediaPlayerMenu.push(devToolsMenu)
-    }
 
-    menuMP = Menu.buildFromTemplate(mediaPlayerMenu);
-    mainWindow.setMenu(menuMP);
+    menuMP = buildMenuFromTemplate(mediaPlayerMenu);
+    setMenu(mainWindow, menuMP);
 
-    if(process.platform === "darwin") {
-        Menu.setApplicationMenu(menuMP)
-    }
     // if (process.platform == "win32" && process.mainModule.filename.indexOf('app.asar') === -1)
     //mainWindow.openDevTools({ mode: 'detach' });
     ipc.on('download', (event, info) => {
@@ -2327,7 +2327,7 @@ function createWindow() {
 
     ipc.on('newWindowOpen', (event, info) => {
         if (info.type == 'youtube') {
-            mainWindow.setMenu(menuExtYoutube);
+            setMenu(mainWindow, menuExtYoutube);
             mainWindow.loadURL(
                 'file://' + __dirname + '/embeddedYoutube.html',
                 { userAgent: 'Chrome' }
@@ -2345,10 +2345,7 @@ function createWindow() {
       `
             );
         } else if (info.type == 'local') {
-            mainWindow.setMenu(menuMP);
-            if (process.platform === "darwin") {
-                Menu.setApplicationMenu(menuMP)
-            }
+            setMenu(mainWindow, menuMP);
             mainWindow.loadURL('file://' + __dirname + '/MediaPl.html');
             mainWindow.webContents.executeJavaScript(
                 'player.vlc.play("file:///" + "' +
