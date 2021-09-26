@@ -45,7 +45,7 @@ const { JSONStorage } = require('node-localstorage');
 var Datastore = require('nedb');
 var db = new Datastore({
     filename: path.join(
-        path.basename(__dirname),
+        __dirname,
         'newVocab'
     ),
     autoload: true,
@@ -63,9 +63,10 @@ var mainWindow = null;
 global.lang = {
     lang: 'ar',
 };
+
 global.dirName = {
     dirname: path.join(
-        path.basename(__dirname),
+        __dirname,
         'newVocab'
     ),
 };
