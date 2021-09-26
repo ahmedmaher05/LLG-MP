@@ -1,67 +1,81 @@
 {
-        "name": "llg-mp",
-        "description": "Language Learning Gamification Media Player",
-        "author": "Ahmed Maher",
-        "version": "0.2.4",
-        "main": "app.js",
-        "dependencies": {
-                "asyncawait": "^3.0.0",
-                "autocompleter": "^6.0.5",
-                "computer-sleep": "0.0.1",
-                "electron-dl": "^1.14.0",
-                "electron-google-analytics": "^0.1.0",
-                "electron-log": "^3.0.5",
-                "fibers": "^5.0.0",
-                "google-translate-api": "^2.3.0",
-                "google-translate-api-browser": "^1.1.71",
-                "gtts": "^0.2.1",
-                "install": "^0.12.2",
-                "jquery": "3.3.1",
-                "languagedetect": "^2.0.0",
-                "nedb": "^1.8.0",
-                "node-gtts": "^2.0.2",
-                "node-localstorage": "^1.3.1",
-                "npm": "^6.9.0",
-                "opensubtitles-api": "^5.0.1",
-                "subsrt": "^1.1.1",
-                "sweetalert": "^2.1.2",
-                "sweetalert2": "^8.10.2",
-                "universal-analytics": "^0.4.20",
-                "wcjs-player": "^6.0.1",
-                "webchimera.js": "^0.5.2",
-                "xmlhttprequest": "^1.8.0"
-        },
-        "env": "development",
-        "devDependencies": {
-                "electron": "^11.5.0",
-                "electron-builder": "^22.7.0",
-                "eslint": "^7.11.0",
-                "eslint-config-prettier": "^6.13.0",
-                "eslint-config-standard": "^14.1.1",
-                "eslint-plugin-import": "^2.22.1",
-                "eslint-plugin-node": "^11.1.0",
-                "eslint-plugin-prettier": "^3.1.4",
-                "eslint-plugin-promise": "^4.2.1",
-                "eslint-plugin-standard": "^4.0.1",
-                "nodemon": "^2.0.4",
-                "prettier": "^2.1.2"
-        },
-        "scripts": {
-                "preinstall:mac": "npm install webchimera.js --ignore-scripts && mkdir node_modules/webchimera.js/Release && cp ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_osx/WebChimera.js.node ./node_modules/webchimera.js/Release && npm install electron",
-                "postinstall:windows": "cp -r ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_win/webchimera.js ./node_modules ",
-                "postinstall:linux": "sudo apt-get install vlc && npm install webchimera.js --ignore-scripts && mkdir node_modules/webchimera.js/Release && cp ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_linux/WebChimera.js.node ./node_modules/webchimera.js/Release",
-                "postinstall:mac": "(ls /Applications | grep VLC.app || brew install vlc) && cp -r /Applications/VLC.app/Contents/MacOS/lib/ ./node_modules/electron/dist/Electron.app/Contents/Frameworks/ && cp -r ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_osx/plugins ./node_modules/webchimera.js/",
-                "postinstall": "npx patch-package && rm -rf ./node_modules/wcjs-player/node_modules",
-                "install:mac": "npm run preinstall:mac && npm install && npm run postinstall:mac",
-                "dev:windows": "nodemon --watch . --exec \"./node_modules/electron/dist/electron.exe . --debug\" --ext html,js,json,css",
-                "dev:linux": "nodemon --watch . --exec \"./node_modules/electron/dist/electron . --debug\" --ext html,js,json,css",
-                "dev:mac": "nodemon --watch . --exec \"./node_modules/electron/dist/Electron.app/Contents/MacOS/Electron . --debug\" --ext html,js,json,css",
-                "pack": "electron-builder --dir",
-                "dist": "electron-builder",
-                "dist:windows": "electron-builder -w",
-                "dist:linux": "electron-builder -l",
-                "predist:mac": "mkdir -p ./dist/mac/llg-mp.app/Contents/Frameworks && cp -r /Applications/VLC.app/Contents/MacOS/lib/ ./dist/mac/llg-mp.app/Contents/Frameworks",
-                "dist:mac": "npm run predist:mac && electron-builder -m"
+    "name": "llg-mp",
+    "description": "Language Learning Gamification Media Player",
+    "author": "Ahmed Maher",
+    "version": "0.2.4",
+    "main": "app.js",
+    "dependencies": {
+            "asyncawait": "^3.0.0",
+            "autocompleter": "^6.0.5",
+            "computer-sleep": "0.0.1",
+            "electron-dl": "^1.14.0",
+            "electron-google-analytics": "^0.1.0",
+            "electron-log": "^3.0.5",
+            "fibers": "^5.0.0",
+            "google-translate-api": "^2.3.0",
+            "google-translate-api-browser": "^1.1.71",
+            "gtts": "^0.2.1",
+            "install": "^0.12.2",
+            "jquery": "3.3.1",
+            "languagedetect": "^2.0.0",
+            "nedb": "^1.8.0",
+            "node-gtts": "^2.0.2",
+            "node-localstorage": "^1.3.1",
+            "npm": "^6.9.0",
+            "opensubtitles-api": "^5.0.1",
+            "subsrt": "^1.1.1",
+            "sweetalert": "^2.1.2",
+            "sweetalert2": "^8.10.2",
+            "universal-analytics": "^0.4.20",
+            "wcjs-player": "^6.0.1",
+            "webchimera.js": "^0.5.2",
+            "xmlhttprequest": "^1.8.0"
+    },
+    "env": "development",
+    "devDependencies": {
+            "electron": "^11.5.0",
+            "electron-builder": "^22.7.0",
+            "eslint": "^7.11.0",
+            "eslint-config-prettier": "^6.13.0",
+            "eslint-config-standard": "^14.1.1",
+            "eslint-plugin-import": "^2.22.1",
+            "eslint-plugin-node": "^11.1.0",
+            "eslint-plugin-prettier": "^3.1.4",
+            "eslint-plugin-promise": "^4.2.1",
+            "eslint-plugin-standard": "^4.0.1",
+            "nodemon": "^2.0.4",
+            "prettier": "^2.1.2"
+    },
+    "scripts": {
+            "preinstall:mac": "npm install webchimera.js --ignore-scripts && mkdir node_modules/webchimera.js/Release && cp ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_osx/WebChimera.js.node ./node_modules/webchimera.js/Release && npm install electron",
+            "postinstall:windows": "cp -r ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_win/webchimera.js ./node_modules ",
+            "postinstall:linux": "sudo apt-get install vlc && npm install webchimera.js --ignore-scripts && mkdir node_modules/webchimera.js/Release && cp ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_linux/WebChimera.js.node ./node_modules/webchimera.js/Release",
+            "postinstall:mac": "(ls /Applications | grep VLC.app || brew install vlc) && cp -r /Applications/VLC.app/Contents/MacOS/lib/ ./node_modules/electron/dist/Electron.app/Contents/Frameworks/ && cp -r ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_osx/plugins ./node_modules/webchimera.js/",
+            "postinstall": "npx patch-package && rm -rf ./node_modules/wcjs-player/node_modules",
+            "install:mac": "npm run preinstall:mac && npm install && npm run postinstall:mac",
+            "dev:windows": "nodemon --watch . --exec \"./node_modules/electron/dist/electron.exe . --debug\" --ext html,js,json,css",
+            "dev:linux": "nodemon --watch . --exec \"./node_modules/electron/dist/electron . --debug\" --ext html,js,json,css",
+            "dev:mac": "nodemon --watch . --exec \"./node_modules/electron/dist/Electron.app/Contents/MacOS/Electron . --debug\" --ext html,js,json,css",
+            "pack": "electron-builder --dir",
+            "pack:mac": "electron-builder --dir -m",
+            "dist": "electron-builder",
+            "dist:windows": "electron-builder -w",
+            "dist:linux": "electron-builder -l",
+            "dist:mac": "electron-builder -m"
+    },
+    "build": {
+        "appId": "com.electron.llg-mp",
+        "asar": false,
+        "mac": {
+            "category": "your.app.category.type",
+            "target": "dmg",
+            "extraFiles": [
+                {
+                    "from": "/Applications/VLC.app/Contents/MacOS/lib/",
+                    "to": "Frameworks/",
+                    "filter": "**/*"
+                }
+            ]
         },
         "linux": {
                 "target": [
@@ -71,17 +85,6 @@
         "win": {
                 "target": "NSIS",
                 "icon": "build/icon.ico"
-        },
-        "mac": {
-                "category": "your.app.category.type",
-                "target": "dmg"
-        },
-        "build": {
-                "appId": "com.electron.llg-mp",
-                "files": [
-                        "**/*",
-                        "build"
-                ],
-                "asar": false
         }
+    }
 }
