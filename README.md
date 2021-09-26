@@ -157,7 +157,7 @@ For more information please read [CONTRIBUTING.md](https://gist.github.com/engMa
 ```
 git clone https://github.com/engMaher/LLG-MP.git
 npm install
-npm run postinstall-windows
+npm run postinstall:windows
 ```
 
 </td>
@@ -166,7 +166,7 @@ npm run postinstall-windows
 ```
 git clone https://github.com/engMaher/LLG-MP.git
 npm install
-npm run postinstall-linux
+npm run postinstall:linux
 ```
 
 </td>
@@ -174,9 +174,7 @@ npm run postinstall-linux
 
 ```
 git clone https://github.com/engMaher/LLG-MP.git
-npm run preinstall-mac
-npm install
-npm run postinstall-mac
+npm run install:mac 
 ```
 
 </td>
@@ -186,21 +184,21 @@ npm run postinstall-mac
 <td>
 
 ```
-npm run dev-windows 
+npm run dev:windows 
 ```
 
 </td>
 <td>
 
 ```
-npm run dev-linux 
+npm run dev:linux 
 ```
 
 </td>
 <td>
 
 ```
-npm run dev-mac 
+npm run dev:mac 
 ```
 
 </td>
@@ -224,7 +222,6 @@ npm run dist:linux
 <td>
 
 ```
-npm run predist:mac
 npm run dist:mac
 ```
 

@@ -47,20 +47,21 @@
                 "prettier": "^2.1.2"
         },
         "scripts": {
-                "preinstall-mac": "npm install webchimera.js --ignore-scripts && mkdir node_modules/webchimera.js/Release && cp ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_osx/WebChimera.js.node ./node_modules/webchimera.js/Release && npm install electron",
-                "postinstall-windows": "cp -r ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_win/webchimera.js ./node_modules ",
-                "postinstall-linux": "sudo apt-get install vlc && npm install webchimera.js --ignore-scripts && mkdir node_modules/webchimera.js/Release && cp ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_linux/WebChimera.js.node ./node_modules/webchimera.js/Release",
-                "postinstall-mac": "(ls /Applications | grep VLC.app || brew install vlc) && cp -r /Applications/VLC.app/Contents/MacOS/lib/ ./node_modules/electron/dist/Electron.app/Contents/Frameworks/ && cp -r ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_osx/plugins ./node_modules/webchimera.js/",
+                "preinstall:mac": "npm install webchimera.js --ignore-scripts && mkdir node_modules/webchimera.js/Release && cp ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_osx/WebChimera.js.node ./node_modules/webchimera.js/Release && npm install electron",
+                "postinstall:windows": "cp -r ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_win/webchimera.js ./node_modules ",
+                "postinstall:linux": "sudo apt-get install vlc && npm install webchimera.js --ignore-scripts && mkdir node_modules/webchimera.js/Release && cp ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_linux/WebChimera.js.node ./node_modules/webchimera.js/Release",
+                "postinstall:mac": "(ls /Applications | grep VLC.app || brew install vlc) && cp -r /Applications/VLC.app/Contents/MacOS/lib/ ./node_modules/electron/dist/Electron.app/Contents/Frameworks/ && cp -r ./wcjs-prebuilt/wcjs_electron_11.1.0_x64_osx/plugins ./node_modules/webchimera.js/",
                 "postinstall": "npx patch-package && rm -rf ./node_modules/wcjs-player/node_modules",
-                "dev-windows": "nodemon --watch . --exec \"./node_modules/electron/dist/electron.exe . --debug\" --ext html,js,json,css",
-                "dev-linux": "nodemon --watch . --exec \"./node_modules/electron/dist/electron . --debug\" --ext html,js,json,css",
-                "dev-mac": "nodemon --watch . --exec \"./node_modules/electron/dist/Electron.app/Contents/MacOS/Electron . --debug\" --ext html,js,json,css",
+                "install:mac": "npm run preinstall:mac && npm install && npm run postinstall:mac",
+                "dev:windows": "nodemon --watch . --exec \"./node_modules/electron/dist/electron.exe . --debug\" --ext html,js,json,css",
+                "dev:linux": "nodemon --watch . --exec \"./node_modules/electron/dist/electron . --debug\" --ext html,js,json,css",
+                "dev:mac": "nodemon --watch . --exec \"./node_modules/electron/dist/Electron.app/Contents/MacOS/Electron . --debug\" --ext html,js,json,css",
                 "pack": "electron-builder --dir",
                 "dist": "electron-builder",
                 "dist:windows": "electron-builder -w",
                 "dist:linux": "electron-builder -l",
                 "predist:mac": "mkdir -p ./dist/mac/llg-mp.app/Contents/Frameworks && cp -r /Applications/VLC.app/Contents/MacOS/lib/ ./dist/mac/llg-mp.app/Contents/Frameworks",
-                "dist:mac": "electron-builder -m"
+                "dist:mac": "npm run predist:mac && electron-builder -m"
         },
         "linux": {
                 "target": [
