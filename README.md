@@ -93,15 +93,15 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
     ```npm run dev-linux ```
     <br><br>
 
-## [Demo youtube playlist demonstrating how to use LLG media player](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1)
+<!-- ## [Demo youtube playlist demonstrating how to use LLG media player](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1)
 
-[![Watch the video](https://i.imgur.com/QSuecRg.png)](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1)
+[![Watch the video](https://i.imgur.com/QSuecRg.png)](https://www.youtube.com/watch?v=irOc8Un86pM&list=PLElD1l78qwgrAVCFHVvIUqh9zhY13JpnK&index=1) -->
 
-## Pictures from the media player 
+<!-- ## Pictures from the media player 
 ![image not found](https://i.imgur.com/lbv4xl6.jpg)
 
 ## Users anonymous heat map generated via google analytics 
-![image not found](https://i.imgur.com/raPYwUW.png)
+![image not found](https://i.imgur.com/raPYwUW.png) -->
 
 ## TODO list(features)
 - [x] Normal media player (much like VLC)
