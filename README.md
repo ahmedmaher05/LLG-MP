@@ -16,7 +16,7 @@ Language Learning Gamification Media Player
 * This software is under  AGPLv3 license
 
 ______________________________________________________________________________________________________________________________
-## what is LLG-MP ?
+## what is LLG-MP in details ?
 
 LLG media player is an <a href="https://electronjs.org/">Electron</a> based open source media player built with <a href="https://github.com/RSATom/WebChimera.js">webchimera.js</a> which provides javscript bindings for <a href="https://www.videolan.org/vlc/libvlc.html">libvlc</a>, it's main purpose is to gamify the language learning process through appending clickable subtitles/lyrics to different types of local/remote media with an onclick instant translation during the media stream flow , it also provides the ability to save new words/expressions along with their translations for future reference ,the clickable subtitles/lyrics functionality is performed through the manipulation of <a href="https://github.com/mozilla/vtt.js?files=1">vtt.js library</a> which is Mozilla's implementation of <a href="https://en.wikipedia.org/wiki/WebVTT">WEBVTT standard</a> <br>
 ## LLG-MP features
@@ -53,7 +53,7 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 * Refer to new words/expressions in savedWords view
 * Download subtitles files (by either media hash or specifying movie/series name) and append them to either local media file or youtube/yesmovies videos .
 
-## LLG Media Player features 
+## LLG Media Player basic functionalities 
 * Supports almost all media formats much like VLC media player as both are built on the same media engine (libvlc)  
 * Supports popular subtitles files such as .vtt & .srt
 * Transforms subtitles/lyrics words and phrases into clickable strings , once clicked their google translation appears 
@@ -62,14 +62,6 @@ LLG media player is an <a href="https://electronjs.org/">Electron</a> based open
 * Ability to fetch songs lyrics by song name & singer name then show it on either local media or remote media from youtube/yesmovies (clickable & translatable)
 * Ability to import subtitles file and append it to either local media or remote media from youtube/yesmovies videos (clickable & translatable)
 * Ability to save new words/phrases along with their translation , local media path/remote media url and time of occurence in the media file
-
-## what can i do with LLG Media Player ?
-* You can use it as a regular media player much like vlc 
-* Browse pc for a subtitles file to be appended to youtube / yesmovies videos 
-* Search and fetch lyrics while playing youtube songs with controls over the video through keyboard buttons 
-* Browse PC for subtitles file and append it to local media / youtube video / yesmovies video 
-* Refer to new words/expressions in savedWords view 
-* Download subtitles files (by either media hash or specifying movie/series name) and append them to either local media file or youtube/yesmovies videos . 
 
 ## How to use LLG Media Player ? 
 * As a regular user : download and install the latest release from this <a href="https://github.com/engMaher/LLG-MP/releases">link</a> which complies with your operation system type/architecture [currently only windows 64-bit is supported] 
